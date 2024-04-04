@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <title>Movie List</title>
+</head>
+<body>
+    <h1>Movie List</h1>
+    <ul>
+        {% for movie in movies %}
+            <div style="padding: 10px;">
+                <li>{{ movie.title }}</li>
+                <li>{{ movie.description }}</li>
+                <li><img src="{{ movie.poster.url }}" width="100"></li>
+            </div>
+        {% empty %}
+            <li>No movies available.</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

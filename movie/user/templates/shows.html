@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <title>Shows List</title>
+</head>
+<body>
+    <h1>Show List</h1>
+    <ul>
+        {% for show in shows %}
+            <div style="padding: 10px;">
+                <li>{{ show.movie.title }}</li>
+                <li>{{ movie.time }}</li>
+                <li><img src="{{ show.movie.poster.url }}" width="100"></li>
+            </div>
+        {% empty %}
+            <li>No shows available.</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
