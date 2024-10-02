@@ -8,13 +8,11 @@ Prerequisite install python. To see which version visit https://docs.djangoproje
 
 How to make virtual environment?
 
-python3 -m venv myvenv
-
-to activate virtual environment:
-
+In linux env
+1. python3 -m venv myvenv
 source myvenv/bin/activate
 
-to deactivate:
+2. pip install -r requirements.txt
 
 deactivate
 
@@ -30,3 +28,6 @@ python manage.py migrate
 
 to run the server do:
 python manage.py runserver
+
+installed a new package?
+pip freeze > requirements.txt

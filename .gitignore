@@ -1,7 +1,6 @@
-myvenv
-movie/media/
-movie/db.sqlite3
-movie/movie/__pycache__/
+myvenv/
 movie/user/__pycache__/
-
-/home/eleensmathew/mov/movie/db.sqlite3
+movie/db.sqlite3
+movie/movie/__pycache__
+movie/user/__pycache__/
+db.sqlite3
