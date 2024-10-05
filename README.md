@@ -61,7 +61,13 @@ For detailed documentation, visit: [Django Documentation](https://docs.djangopro
 Before coding, you need to install Django in your virtual environment:
 ```bash
 pip install django
+```
 
 ## Contributing 
 While raing the pull request, add ypur name to the CONTRIBUTORS.md file
 
+## Updating requirements.txt
+While adding packages, update requirements.
+```bash
+pip freeze > requirements.txt
+```
