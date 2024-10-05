@@ -1,33 +1,67 @@
 # MovieScreen
 
-basic django website for first time learners
+A basic Django website for first-time learners.
 
-For documentation: https://docs.djangoproject.com/en/5.0/
+## Documentation
 
-Prerequisite install python. To see which version visit https://docs.djangoproject.com/en/5.0/faq/install/#what-python-version-can-i-use-with-django
+For detailed documentation, visit: [Django Documentation](https://docs.djangoproject.com/en/5.0/)
 
-How to make virtual environment?
+## Prerequisites
 
-In linux env
-1. python3 -m venv myvenv
-source myvenv/bin/activate
+- Install Python. To see which version is compatible, visit: [Django FAQ](https://docs.djangoproject.com/en/5.0/faq/install/#what-python-version-can-i-use-with-django)
 
-2. pip install -r requirements.txt
+## Setting Up a Virtual Environment
 
-deactivate
+### On Linux
 
-before coding you need to install django in ypur virtual env:
+1. Create a virtual environment:
+    ```bash
+    python3 -m venv myvenv
+    ```
 
+2. Activate the virtual environment:
+    ```bash
+    source myvenv/bin/activate
+    ```
+
+3. Install the required packages:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Deactivate the virtual environment when done:
+    ```bash
+    deactivate
+    ```
+
+### On Windows
+
+1. Create a virtual environment:
+    ```bash
+    python -m venv myvenv
+    ```
+
+2. Activate the virtual environment:
+    ```bash
+    myvenv\Scripts\activate
+    ```
+
+3. Install the required packages:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Deactivate the virtual environment when done:
+    ```bash
+    deactivate
+    ```
+
+## Installing Django
+
+Before coding, you need to install Django in your virtual environment:
+```bash
 pip install django
 
-if you made changed in your models do:
+## Contributing 
+While raing the pull request, add ypur name to the CONTRIBUTORS.md file
 
-python manage.py makemigrations
-
-python manage.py migrate
-
-to run the server do:
-python manage.py runserver
-
-installed a new package?
-pip freeze > requirements.txt
