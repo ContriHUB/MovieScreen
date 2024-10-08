@@ -23,7 +23,7 @@ def add_movie(request):
 
         # only title is provided  fetch data from the API
         if title and not description and not poster:
-            api_key = # add it 
+            api_key = '7c5787e7' 
             url = f'http://www.omdbapi.com/?t={title}&apikey={api_key}'
             response = requests.get(url)
             data = response.json()
