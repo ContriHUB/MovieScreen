@@ -12,3 +12,4 @@ sqlparse==0.5.1
 textblob==0.18.0.post0
 tqdm==4.66.5
 typing_extensions==4.12.2
+requests==2.31.0
