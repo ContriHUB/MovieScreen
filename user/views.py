@@ -19,8 +19,7 @@ def shows(request):
     return render(request, 'shows.html', {'shows': shows})
 
 
-def home(request):
-    return render(request, 'base.html')
+
 
 
 class MovieAutocomplete(View):
@@ -128,7 +127,8 @@ class AddShowView(View):
             return redirect('user:shows')
         return render(request, self.template_name, {'form': form})
 
-class MovieListView(View):
-    def get(self, request):
-        movies = Movies.objects.all() 
-        return render(request, 'movie_list.html', {'movies': movies}) 
+
+
+def movie_list(request):
+    movies = Movies.objects.all()
+    return render(request, 'movie_list.html', {'movies': movies})

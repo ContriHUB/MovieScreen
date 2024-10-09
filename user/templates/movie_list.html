@@ -11,11 +11,8 @@
     <div style="padding: 10px;">
         <li>{{ movie.title }}</li>
         <li>{{ movie.description }}</li>
-        {% if movie.poster %}
-            <li><img src="{{ movie.poster.url }}" width="100" alt="{{ movie.title }} poster"></li>
-        {% else %}
-            <li>No poster available</li>
-        {% endif %}
+        <li><img src="{{ movie.poster.url }}" width="100" alt="{{ movie.title }} poster"></li>
+        
     </div>
     {% empty %}
     <li>No movies available.</li>
