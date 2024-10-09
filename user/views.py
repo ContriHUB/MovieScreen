@@ -3,6 +3,11 @@ from .models import Show, Movies
 from django.utils import timezone
 from .forms import ShowForm
 from django.views import View
+from django.urls import reverse
+
+# Redirect to /user/shows/
+def redirect_to_shows(request):
+    return redirect(reverse('user:shows'))  # Use 'reverse' for named URLs
 
 def shows(request):
     upcoming_shows = Show.objects.all().order_by('-time')
@@ -13,11 +18,15 @@ def add_movie(request):
         title = request.POST.get('title')
         description = request.POST.get('description')
         poster = request.FILES.get('poster')
-        available = request.POST.get('available', False)
-        movie = Movies.objects.create(title=title, description=description, 
-poster=poster, available=available)
+        available = request.POST.get('available', False) == 'on'  # Correctly handle checkbox value
+        movie = Movies.objects.create(
+            title=title, 
+            description=description, 
+            poster=poster, 
+            available=available
+        )
         print(movie)
-        movie.save
+        movie.save()  # Call save() to save the movie object properly
         
         return redirect('movie_list')
     else:
@@ -26,7 +35,6 @@ poster=poster, available=available)
 def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
-
 
 class AddShowView(View):
     form_class = ShowForm
@@ -40,5 +48,5 @@ class AddShowView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('user:shows')
+            return redirect(reverse('user:shows'))  # Use reverse to redirect to 'shows'
         return render(request, self.template_name, {'form': form})
