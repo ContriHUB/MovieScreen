@@ -18,10 +18,6 @@ def shows(request):
     shows = Show.objects.all().order_by('-time')
     return render(request, 'shows.html', {'shows': shows})
 
-
-
-
-
 class MovieAutocomplete(View):
     def get(self, request):
         query = request.GET.get('query', '')
