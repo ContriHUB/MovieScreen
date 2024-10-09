@@ -12,7 +12,9 @@
     <nav>
         
         <a class="nav-item nav-link" href="{% url 'user:shows' %}">Shows</a>
+        {% if request.user.is_staff %}
         <a class="nav-item nav-link" href="{% url 'user:add_movie' %}">Add Movie</a>
+        {% endif %}
         <a class="nav-item nav-link" href="{% url 'user:movie_list' %}">Movie List</a>
     </nav>
 

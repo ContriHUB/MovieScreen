@@ -11,6 +11,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.conf import settings
 from dotenv import load_dotenv
 load_dotenv()
+from django.contrib.admin.views.decorators import staff_member_required
 
 API_KEY = os.getenv('API_KEY')
 
@@ -41,6 +42,7 @@ class MovieAutocomplete(View):
 
 
 # it will fetch data from api if only title field is  provided 
+@staff_member_required
 def add_movie(request):
     if request.method == 'POST':
         title = request.POST.get('title')
