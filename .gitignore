@@ -5,3 +5,4 @@ myvenv/
 /media/
 /movie/user/__pycache__/
 .env
+/user/migrations/
