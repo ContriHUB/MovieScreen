@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+<h1>Book Ticket for {{ show.movie.title }}</h1>
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="seat_number">Seat Number:</label>
+    <input type="text" id="seat_number" name="seat_number" required>
+    <button type="submit">Book Ticket</button>
+</form>
+
+<a href="{% url 'user:shows' %}">Back to Shows</a>
