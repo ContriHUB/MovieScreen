@@ -8,14 +8,15 @@
     <h1>Movie List</h1>
     <ul>
         {% for movie in movies %}
-            <div style="padding: 10px;">
-                <li>{{ movie.title }}</li>
-                <li>{{ movie.description }}</li>
-                <li><img src="{{ movie.poster.url }}" width="100"></li>
-            </div>
-        {% empty %}
-            <li>No movies available.</li>
-        {% endfor %}
+    <div style="padding: 10px;">
+        <li>{{ movie.title }}</li>
+        <li>{{ movie.description }}</li>
+        <li><img src="{{ movie.poster.url }}" width="100" alt="{{ movie.title }} poster"></li>
+        
+    </div>
+    {% empty %}
+    <li>No movies available.</li>
+    {% endfor %}
     </ul>
 </body>
 {% endblock %}

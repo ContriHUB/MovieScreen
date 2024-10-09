@@ -1,21 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Add a New Movie</h1>
-    <div>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}  
-            <label for="title">Title:</label>
-            <input type="text" name="title" id="title" required><br>
-            <label for="description">Description:</label>
-            <textarea name="description" id="description" rows="5" required></textarea><br>
-            <label for="poster">Poster Image:</label>
-            <input type="file" name="poster" id="poster" accept="image/*"><br>
-            <label for="available">Available:</label>
-            <input type="checkbox" name="available" id="available" value="True"> Available for viewing<br><br>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-            <button type="submit">Add Movie</button>
-        </form>
-    </div>
+<h1>Add a New Movie</h1>
+<div>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}  
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title" list="suggestions" required placeholder="Search movies..."><br>
+        <datalist id="suggestions"></datalist>
+        <button type="submit">Add Movie</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('title').addEventListener('input', function() {
+        var query = this.value;
+        if (query.length > 2) {
+            axios.get('{% url "user:movie_autocomplete" %}', {
+                params: {
+                    query: query
+                }
+            })
+            .then(function(response) {
+                let suggestions = document.getElementById('suggestions');
+                suggestions.innerHTML = '';
+                response.data.forEach(title => {
+                    let option = document.createElement('option');
+                    option.value = title;
+                    suggestions.appendChild(option);
+                });
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+            });
+        }
+    });
+</script>
 
 {% endblock %}
