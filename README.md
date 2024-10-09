@@ -1,6 +1,5 @@
 # MovieScreen
 
-<<<<<<< HEAD
 A basic Django website for first-time learners.
 
 
