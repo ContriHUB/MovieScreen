@@ -104,7 +104,6 @@ def add_movie(request):
 
 def movie_list(request):
     movies = Movies.objects.all()
-      
     return render(request, 'movie_list.html', {'movies': movies})
 
 
@@ -125,6 +124,3 @@ class AddShowView(View):
 
 
 
-def movie_list(request):
-    movies = Movies.objects.all()
-    return render(request, 'movie_list.html', {'movies': movies})
