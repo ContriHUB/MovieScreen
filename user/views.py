@@ -1,4 +1,5 @@
 import requests
+import os
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Show, Movies
@@ -8,6 +9,10 @@ from django.views import View
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.conf import settings
+from dotenv import load_dotenv
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
 
 def shows(request):
     shows = Show.objects.all().order_by('-time')
@@ -24,7 +29,7 @@ class MovieAutocomplete(View):
         print(f"Query received: {query}") 
         if query:
             ##########
-            api= # input 
+            api=API_KEY
             ##########
             url = f"http://www.omdbapi.com/?s={query}&apikey={api}"
             response = requests.get(url)
@@ -55,7 +60,7 @@ def add_movie(request):
         # only title is provided  fetch data from the API
         if title and not description and not poster:
             ############
-            api_key = # input 
+            api_key =API_KEY
             ############
             url = f'http://www.omdbapi.com/?t={title}&apikey={api_key}'
             response = requests.get(url)

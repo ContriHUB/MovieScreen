@@ -1,6 +1,7 @@
 # MovieScreen
 
-A basic Django website for first-time learners.
+A basic Django website for first-time learners.<br>
+enter api key in .env -by divyansh :)
 
 ## Documentation
 
