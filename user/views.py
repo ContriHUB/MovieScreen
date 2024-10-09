@@ -1,4 +1,5 @@
 import requests
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Show, Movies
 from django.utils import timezone
@@ -6,13 +7,39 @@ from .forms import ShowForm
 from django.views import View
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
+from django.conf import settings
 
 def shows(request):
     shows = Show.objects.all().order_by('-time')
     return render(request, 'shows.html', {'shows': shows})
 
+
 def home(request):
     return render(request, 'base.html')
+
+
+class MovieAutocomplete(View):
+    def get(self, request):
+        query = request.GET.get('query', '')
+        print(f"Query received: {query}") 
+        if query:
+            ##########
+            api= # input 
+            ##########
+            url = f"http://www.omdbapi.com/?s={query}&apikey={api}"
+            response = requests.get(url)
+            data = response.json()
+            print(f"API response: {data}") 
+        
+            if data.get('Response') == 'True':
+                titles = [movie['Title'] for movie in data.get('Search', [])]
+                return JsonResponse(titles, safe=False)
+            else:
+            
+                return JsonResponse([], safe=False)
+        return JsonResponse([], safe=False)
+
+
 # it will fetch data from api if only title field is  provided 
 def add_movie(request):
     if request.method == 'POST':
@@ -21,9 +48,15 @@ def add_movie(request):
         poster = request.FILES.get('poster') 
         available = request.POST.get('available', False) 
 
+        
+        if Movies.objects.filter(title=title).exists():
+            return render(request, 'add_movie.html', {'error_message': 'Movie already exists!'})
+
         # only title is provided  fetch data from the API
         if title and not description and not poster:
-            api_key = '7c5787e7' 
+            ############
+            api_key = # input 
+            ############
             url = f'http://www.omdbapi.com/?t={title}&apikey={api_key}'
             response = requests.get(url)
             data = response.json()
