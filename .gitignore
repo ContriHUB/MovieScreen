@@ -3,3 +3,4 @@ myvenv/
 /db.sqlite3
 /user/__pycache__/
 /media/
+user/migrations/__pycache__/

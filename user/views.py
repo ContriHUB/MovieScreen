@@ -26,6 +26,21 @@ def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
 
+class AddShowView(View):
+    form_class = ShowForm
+    template_name = 'add_show.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user:shows')
+        return render(request, self.template_name, {'form': form})
+
 @login_required
 def book_ticket(request, show_id):
     show = Show.objects.get(id=show_id)
@@ -42,6 +57,10 @@ def book_ticket(request, show_id):
 
         if ticket_count >= 2:
             return render(request, 'book_ticket.html', {'show': show, 'error': 'You can only book up to 2 tickets per month.'})
+
+        # Check if the seat is already booked
+        if Ticket.objects.filter(show=show, seat_number=seat_number).exists():
+            return render(request, 'book_ticket.html', {'show': show, 'error': 'This seat is already booked.'})
 
         # Create and save the ticket
         Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
