@@ -1,7 +1,9 @@
 # MovieScreen
 
 A basic Django website for first-time learners.<br>
-note - enter the api key of omdb in user/views.py :)
+note - enter the api key of omdb in user/views.py :)<br>
+and make migrations of user models 
+
 
 ## Documentation
 
