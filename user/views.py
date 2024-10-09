@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Show, Movies
+from .models import Show, Movies, Ticket
 from django.utils import timezone
 from .forms import ShowForm
 from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 def shows(request):
     upcoming_shows = Show.objects.all().order_by('-time')
@@ -14,11 +16,8 @@ def add_movie(request):
         description = request.POST.get('description')
         poster = request.FILES.get('poster')
         available = request.POST.get('available', False)
-        movie = Movies.objects.create(title=title, description=description, 
-poster=poster, available=available)
-        print(movie)
-        movie.save
-        
+        movie = Movies.objects.create(title=title, description=description, poster=poster, available=available)
+        movie.save()
         return redirect('movie_list')
     else:
         return render(request, 'add_movie.html')
@@ -27,18 +26,25 @@ def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
 
+@login_required
+def book_ticket(request, show_id):
+    show = Show.objects.get(id=show_id)
+    
+    if request.method == 'POST':
+        seat_number = request.POST.get('seat_number')
 
-class AddShowView(View):
-    form_class = ShowForm
-    template_name = 'add_show.html'
+        # Count tickets booked by the user this month
+        ticket_count = Ticket.objects.filter(
+            user=request.user,
+            booked_at__month=timezone.now().month,
+            booked_at__year=timezone.now().year
+        ).count()
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        if ticket_count >= 2:
+            return render(request, 'book_ticket.html', {'show': show, 'error': 'You can only book up to 2 tickets per month.'})
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('user:shows')
-        return render(request, self.template_name, {'form': form})
+        # Create and save the ticket
+        Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
+        return redirect('user:shows')
+
+    return render(request, 'book_ticket.html', {'show': show})
