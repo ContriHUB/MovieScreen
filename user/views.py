@@ -44,16 +44,12 @@ class MovieAutocomplete(View):
 def add_movie(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        description = request.POST.get('description')
-        poster = request.FILES.get('poster') 
-        available = request.POST.get('available', False) 
-
         
         if Movies.objects.filter(title=title).exists():
             return render(request, 'add_movie.html', {'error_message': 'Movie already exists!'})
 
         # only title is provided  fetch data from the API
-        if title and not description and not poster:
+        if title :
             ############
             api_key =API_KEY
             ############
@@ -75,7 +71,7 @@ def add_movie(request):
                 movie = Movies.objects.create(
                     title=title,
                     description=description,
-                    available=available
+                    available=True
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
                 movie.save()
@@ -89,14 +85,7 @@ def add_movie(request):
 
     
         else:
-            movie = Movies.objects.create(
-                title=title,
-                description=description,
-                poster=poster, 
-                available=available
-            )
-            movie.save()
-            return redirect('user:movie_list')
+           return redirect('user:movie_list')
 
     else:
         return render(request, 'add_movie.html')
