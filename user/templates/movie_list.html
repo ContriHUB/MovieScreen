@@ -9,9 +9,9 @@
     <ul>
         {% for movie in movies %}
             <div style="padding: 10px;">
-                <li>{{ movie.title }}</li>
+                <li id="textTitle">{{ movie.title }}</li>
                 <li>{{ movie.description }}</li>
-                <li><img src="{{ movie.poster.url }}" width="100"></li>
+                <img src="{{ movie.poster.url }}" width="200px" height="100px">
             </div>
         {% empty %}
             <li>No movies available.</li>

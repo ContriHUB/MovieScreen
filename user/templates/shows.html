@@ -9,12 +9,12 @@
     <ul>
         {% for show in shows %}
             <div style="padding: 10px;">
-                <li>{{ show.movie.title }}</li>
+                <li id="textTitle">{{ show.movie.title }}</li>
                 <li>{{ movie.time }}</li>
-                <li><img src="{{ show.movie.poster.url }}" width="100"></li>
+                <img src="{{ show.movie.poster.url }}" width="200px" height="100px">
             </div>
         {% empty %}
-            <li>No shows available.</li>
+            <li> No shows available.</li>
         {% endfor %}
     </ul>
 </body>
