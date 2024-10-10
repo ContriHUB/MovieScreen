@@ -2,6 +2,7 @@
 
 A basic Django website for first-time learners.
 
+
 ## Documentation
 
 For detailed documentation, visit: [Django Documentation](https://docs.djangoproject.com/en/5.0/)
@@ -55,7 +56,19 @@ For detailed documentation, visit: [Django Documentation](https://docs.djangopro
     ```bash
     deactivate
     ```
+## Running Migrations
+Once Django is installed, you need to create the database tables for the application:
 
+Make migrations for your user app:
+
+```bash
+   python manage.py makemigrations user
+```
+Apply the migrations to the database:
+
+```bash
+   python manage.py migrate
+```
 ## Installing Django
 
 Before coding, you need to install Django in your virtual environment:

@@ -10,8 +10,9 @@
         {% for show in shows %}
             <div style="padding: 10px;">
                 <li id="textTitle">{{ show.movie.title }}</li>
-                <li>{{ movie.time }}</li>
-                <img src="{{ show.movie.poster.url }}" width="200px" height="100px">
+                <li>{{ show.time  }}</li>
+                <img src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
+
             </div>
         {% empty %}
             <li> No shows available.</li>

@@ -11,11 +11,12 @@
             <div style="padding: 10px;">
                 <li id="textTitle">{{ movie.title }}</li>
                 <li>{{ movie.description }}</li>
-                <img src="{{ movie.poster.url }}" width="200px" height="100px">
+                <img src="{{ movie.poster.url }}" width="200px" height="100px" alt="{{ movie.title }} poster">
             </div>
         {% empty %}
             <li>No movies available.</li>
         {% endfor %}
+
     </ul>
 </body>
 {% endblock %}
