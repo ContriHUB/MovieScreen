@@ -1,3 +1,6 @@
+import requests
+import os
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Show, Movies, Ticket
 from django.utils import timezone
@@ -5,20 +8,76 @@ from .forms import ShowForm
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+from django.conf import settings
+from dotenv import load_dotenv
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
 
 def shows(request):
-    upcoming_shows = Show.objects.all().order_by('-time')
-    return render(request, 'shows.html', {'shows': upcoming_shows})
+    shows = Show.objects.all().order_by('-time')
+    return render(request, 'shows.html', {'shows': shows})
+
+class MovieAutocomplete(View):
+    def get(self, request):
+        query = request.GET.get('query', '')
+        print(f"Query received: {query}") 
+        if query:
+            api = API_KEY
+            url = f"http://www.omdbapi.com/?s={query}&apikey={api}"
+            response = requests.get(url)
+            data = response.json()
+            print(f"API response: {data}") 
+        
+            if data.get('Response') == 'True':
+                titles = [movie['Title'] for movie in data.get('Search', [])]
+                return JsonResponse(titles, safe=False)
+            else:
+                return JsonResponse([], safe=False)
+        return JsonResponse([], safe=False)
 
 def add_movie(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        description = request.POST.get('description')
-        poster = request.FILES.get('poster')
-        available = request.POST.get('available', False)
-        movie = Movies.objects.create(title=title, description=description, poster=poster, available=available)
-        movie.save()
-        return redirect('movie_list')
+        
+        if Movies.objects.filter(title=title).exists():
+            return render(request, 'add_movie.html', {'error_message': 'Movie already exists!'})
+
+        if title:
+            api_key = API_KEY
+            url = f'http://www.omdbapi.com/?t={title}&apikey={api_key}'
+            response = requests.get(url)
+            data = response.json()
+
+            if data['Response'] == 'True':
+                description = data.get('Plot', 'No description available.')
+                poster_url = data.get('Poster')
+
+                # Downloading the image 
+                img_temp = NamedTemporaryFile()
+                img_response = requests.get(poster_url)
+                img_temp.write(img_response.content)
+                img_temp.flush()
+
+                # Creating the movie object
+                movie = Movies.objects.create(
+                    title=title,
+                    description=description,
+                    available=True
+                )
+                movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
+                movie.save()
+
+                return redirect('user:movie_list') 
+            
+            else:
+                error_message = data.get('Error', 'Movie not found.')
+                return render(request, 'add_movie.html', {'error_message': error_message})
+
+        else:
+           return redirect('user:movie_list')
     else:
         return render(request, 'add_movie.html')
 
@@ -45,19 +104,15 @@ class AddShowView(View):
 def book_ticket(request, show_id):
     show = Show.objects.get(id=show_id)
 
-   
     booked_seats = Ticket.objects.filter(show=show).values_list('seat_number', flat=True)
 
-   
     total_seats = range(1, 101) 
-
 
     available_seats = [seat for seat in total_seats if seat not in booked_seats]
 
     if request.method == 'POST':
         seat_number = request.POST.get('seat_number')
 
-       
         ticket_count = Ticket.objects.filter(
             user=request.user,
             booked_at__month=timezone.now().month,
@@ -70,7 +125,6 @@ def book_ticket(request, show_id):
         if seat_number not in map(str, available_seats):
             return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats, 'error': 'This seat is already booked or unavailable.'})
 
-       
         Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
         return redirect('user:shows')
 
