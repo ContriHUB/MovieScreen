@@ -18,9 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+#import redirect 
+from django.shortcuts import redirect
+
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # using lamda and redirect to directly to user/shows
+    path('', lambda request: redirect('user/shows/', permanent=False)),
     path('user/', include(('user.urls', 'user'), namespace='user')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
