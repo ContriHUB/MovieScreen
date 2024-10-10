@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 <h1>Book Ticket for {{ show.movie.title }}</h1>
 
 {% if error %}
@@ -7,8 +8,12 @@
 
 <form method="POST">
     {% csrf_token %}
-    <label for="seat_number">Seat Number:</label>
-    <input type="text" id="seat_number" name="seat_number" required>
+    <label for="seat_number">Select Seat Number:</label>
+    <select id="seat_number" name="seat_number" required>
+        {% for seat in available_seats %}
+            <option value="{{ seat }}">{{ seat }}</option>
+        {% endfor %}
+    </select>
     <button type="submit">Book Ticket</button>
 </form>
 
