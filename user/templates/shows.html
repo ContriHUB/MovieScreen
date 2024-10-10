@@ -11,7 +11,7 @@
             <div style="padding: 10px;">
                 <li>{{ show.movie.title }}</li> 
                 <li>{{ show.time }}</li> 
-                <li><img src="{{ show.movie.poster.url }}" width="100" alt="{{ show.movie.title }} poster"></li> 
+                <img src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
             </div>
         {% empty %}
             <li>No shows available.</li>
