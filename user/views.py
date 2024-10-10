@@ -13,6 +13,8 @@ from django.core.files.temp import NamedTemporaryFile
 from django.conf import settings
 from dotenv import load_dotenv
 load_dotenv()
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
 
 API_KEY = os.getenv('API_KEY')
 
@@ -38,6 +40,7 @@ class MovieAutocomplete(View):
                 return JsonResponse([], safe=False)
         return JsonResponse([], safe=False)
 
+@staff_member_required
 def add_movie(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -85,6 +88,7 @@ def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
 
+@method_decorator(staff_member_required, name="dispatch")
 class AddShowView(View):
     form_class = ShowForm
     template_name = 'add_show.html'
