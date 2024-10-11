@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <title>Review {{ movie.title }}</title>
+</head>
+<body>
+    <h1>Review {{ movie.title }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="rating">Rate this movie:</label>
+        <input type="range" id="rating" name="stars" min="0" max="5" step="0.5" value="2.5" oninput="document.getElementById('ratingValue').innerText = this.value">
+        <span id="ratingValue">2.5</span>/5
+        <br>
+        <button type="submit">Submit Rating</button>
+    </form>
+
+    <br>
+    <a href="{% url 'user:movie_list' %}">Back to Movie List</a>
+</body>
+{% endblock %}

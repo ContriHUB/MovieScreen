@@ -1,22 +1,46 @@
 {% extends 'base.html' %}
 
+{% load star_rating %}  {# Load the custom filter here #}
+
 {% block content %}
 <head>
     <title>Movie List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <h1>Movie List</h1>
     <ul>
-        {% for movie in movies %}
-    <div style="padding: 10px;">
-        <li>{{ movie.title }}</li>
-        <li>{{ movie.description }}</li>
-        <li><img src="{{ movie.poster.url }}" width="100" alt="{{ movie.title }} poster"></li>
-        
-    </div>
-    {% empty %}
-    <li>No movies available.</li>
-    {% endfor %}
+        {% for movie in movie_data_list %}
+        <div style="padding: 10px;">
+            <li>{{ movie.movie.title }}</li>
+            <li>{{ movie.movie.description }}</li>
+            <li><img src="{{ movie.movie.poster.url }}" width="100" alt="{{ movie.movie.title }} poster"></li>
+            
+            {# Display the star rating for the movie from your model #}
+            <li>
+                <strong>IMDB rating :</strong>
+                <span class="stars">
+                    {{ movie.movie.stars|fa_star_rating|safe }}  {# Use the filter to render stars #}
+                </span>
+            </li>
+
+            {# Display the latest user rating if available #}
+            {% if movie.latest_rating or movie.latest_rating == 0 %}
+            <li>
+                <strong>Latest User Rating:</strong><br>
+                <span class="stars">
+                    {{ movie.latest_rating|fa_star_rating|safe }}<br>
+                </span>
+            </li>
+            {% endif %}
+
+            <li> 
+                <a href="{% url 'user:movie_review' movie.movie.id %}" class="btn">Add rating!</a>
+            </li>
+        </div>
+        {% empty %}
+        <li>No movies available.</li>
+        {% endfor %}
     </ul>
 </body>
 {% endblock %}
