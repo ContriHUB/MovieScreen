@@ -3,6 +3,4 @@ myvenv/
 /db.sqlite3
 /user/__pycache__/
 /media/
-/movie/user/__pycache__/
-.env
 /user/migrations/

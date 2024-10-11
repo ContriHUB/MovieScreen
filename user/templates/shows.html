@@ -9,9 +9,11 @@
     <ul>
         {% for show in shows %}
             <div style="padding: 10px;">
-                <li>{{ show.movie.title }}</li> 
+                <li id="textTitle">{{ show.movie.title }}</li> 
                 <li>{{ show.time }}</li> 
                 <img src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
+                <!-- Add the 'Book Ticket' link for each show -->
+                <li><a href="{% url 'user:book_ticket' show.id %}">Book Ticket</a></li>
             </div>
         {% empty %}
             <li>No shows available.</li>
