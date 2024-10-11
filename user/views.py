@@ -2,10 +2,12 @@ import requests
 import os
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .models import Show, Movies
+from .models import Show, Movies, Ticket
 from django.utils import timezone
 from .forms import ShowForm
 from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.conf import settings
@@ -25,9 +27,7 @@ class MovieAutocomplete(View):
         query = request.GET.get('query', '')
         print(f"Query received: {query}") 
         if query:
-            ##########
-            api=API_KEY
-            ##########
+            api = API_KEY
             url = f"http://www.omdbapi.com/?s={query}&apikey={api}"
             response = requests.get(url)
             data = response.json()
@@ -37,12 +37,9 @@ class MovieAutocomplete(View):
                 titles = [movie['Title'] for movie in data.get('Search', [])]
                 return JsonResponse(titles, safe=False)
             else:
-            
                 return JsonResponse([], safe=False)
         return JsonResponse([], safe=False)
 
-
-# it will fetch data from api if only title field is  provided
 @staff_member_required
 def add_movie(request):
     if request.method == 'POST':
@@ -51,18 +48,15 @@ def add_movie(request):
         if Movies.objects.filter(title=title).exists():
             return render(request, 'add_movie.html', {'error_message': 'Movie already exists!'})
 
-        # only title is provided  fetch data from the API
-        if title :
-            ############
-            api_key =API_KEY
-            ############
+        if title:
+            api_key = API_KEY
             url = f'http://www.omdbapi.com/?t={title}&apikey={api_key}'
             response = requests.get(url)
             data = response.json()
 
             if data['Response'] == 'True':
                 description = data.get('Plot', 'No description available.')
-                poster_url = data.get('Poster') 
+                poster_url = data.get('Poster')
 
                 # Downloading the image 
                 img_temp = NamedTemporaryFile()
@@ -70,7 +64,7 @@ def add_movie(request):
                 img_temp.write(img_response.content)
                 img_temp.flush()
 
-                # Creating  the movie object
+                # Creating the movie object
                 movie = Movies.objects.create(
                     title=title,
                     description=description,
@@ -82,22 +76,17 @@ def add_movie(request):
                 return redirect('user:movie_list') 
             
             else:
-                # movie not found
                 error_message = data.get('Error', 'Movie not found.')
                 return render(request, 'add_movie.html', {'error_message': error_message})
 
-    
         else:
            return redirect('user:movie_list')
-
     else:
         return render(request, 'add_movie.html')
-
 
 def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
-
 
 @method_decorator(staff_member_required, name="dispatch")
 class AddShowView(View):
@@ -114,3 +103,55 @@ class AddShowView(View):
             form.save()
             return redirect('user:shows')
         return render(request, self.template_name, {'form': form})
+
+@login_required
+def book_ticket(request, show_id):
+    show = Show.objects.get(id=show_id)
+
+    # Get the list of seats that are already booked for this show
+    booked_seats = Ticket.objects.filter(show=show).values_list('seat_number', flat=True)
+
+    # Seat numbers from 1 to 100
+    total_seats = range(1, 101)
+
+    # Filter available seats (those not in the booked_seats list)
+    available_seats = [seat for seat in total_seats if str(seat) not in booked_seats]
+
+    if request.method == 'POST':
+        seat_number = request.POST.get('seat_number')
+
+        # Check if the user has already booked this seat for the selected show
+        if Ticket.objects.filter(user=request.user, show=show, seat_number=seat_number).exists():
+            return render(request, 'book_ticket.html', {
+                'show': show, 
+                'available_seats': available_seats, 
+                'error': 'You have already booked this seat.'
+            })
+
+        # Check if the user has already booked 2 tickets in the current month
+        ticket_count = Ticket.objects.filter(
+            user=request.user,
+            booked_at__month=timezone.now().month,
+            booked_at__year=timezone.now().year
+        ).count()
+
+        if ticket_count >= 2:
+            return render(request, 'book_ticket.html', {
+                'show': show, 
+                'available_seats': available_seats, 
+                'error': 'You can only book up to 2 tickets per month.'
+            })
+
+        # Ensure the selected seat is in the list of available seats
+        if seat_number not in map(str, available_seats):
+            return render(request, 'book_ticket.html', {
+                'show': show, 
+                'available_seats': available_seats, 
+                'error': 'This seat is already booked or unavailable.'
+            })
+
+        # Book the ticket if everything is valid
+        Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
+        return redirect('user:shows')
+
+    return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats})
