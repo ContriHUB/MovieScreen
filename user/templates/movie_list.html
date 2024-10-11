@@ -9,7 +9,7 @@
     <ul>
         {% for movie in movies %}
     <div style="padding: 10px;">
-        <li>{{ movie.title }}</li>
+        <li id="textTitle">{{ movie.title }}</li>
         <li>{{ movie.description }}</li>
         <img src="{{ movie.poster.url }}" width="200px" height="100px" alt="{{ movie.title }} poster">
         
