@@ -1,6 +1,6 @@
 /* styles.css */
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -8,20 +8,20 @@
 
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
 }
 
-.logo{
+.logo {
   align-content: center;
-  font-size:x-large;
+  font-size: x-large;
   font-weight: 600;
   color: #fff;
 }
 
-header{
+header {
   display: flex;
   justify-content: space-between;
   background-color: #333;
@@ -29,140 +29,143 @@ header{
 }
 
 nav {
-    display: flex;
-    padding: 1rem 0rem;
-    gap: 2rem;
-    height: 8dvh;
-    align-items: center;
-  }
-  
-  nav a {
-    flex:1;
-    text-decoration: none;
-    color: #fff;
-    min-width: fit-content;
-    font-size: 1.1rem;
-    transition: all 0.2s ease-in-out;
-    background-color: rgba(240, 248, 255, 0.2);
-    padding: .6rem 1rem;
-    border-radius: 50px;
-    font-size: .95rem;
-  }
-  nav a:hover {
-    color: #ccc;
-    background-color: rgba(240, 248, 255, 0.15);
+  display: flex;
+  padding: 1rem 0rem;
+  gap: 2rem;
+  height: 8dvh;
+  align-items: center;
+}
+
+nav a {
+  flex: 1;
+  text-decoration: none;
+  color: #fff;
+  min-width: fit-content;
+  font-size: 1.1rem;
+  transition: all 0.2s ease-in-out;
+  background-color: rgba(240, 248, 255, 0.2);
+  padding: .6rem 1rem;
+  border-radius: 50px;
+  font-size: .95rem;
+}
+
+nav a:hover {
+  color: #ccc;
+  background-color: rgba(240, 248, 255, 0.15);
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 p {
-    font-size: 1rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
 }
 
 
 .seat-map {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .seat-row {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .seat {
-    display: inline-block;
-    padding: 5px;
-    margin: 2px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff;
-  }
-  
-  .booked {
-    background-color: #ccc;
-  }
-  
-  .empty-seat {
-    display: inline-block;
-    padding: 5px;
-    margin: 2px;
-    border: 1px solid #a81e1e;
-    border-radius: 3px;
-    background-color: #f4ad12;
-  }
-  .profile-page {
-    margin: 0 auto;
-    width: 500px;
-    min-height: 100vh;
-    background-color: #fff;
-    padding: 20px;
-  }
-  
-  .profile-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    float: left;
-    margin-right: 20px;
-  }
-  
-  .image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .profile-info {
-    margin-top: 20px;
-  }
-  
-  .profile-name {
-    font-size: 20px;
-    font-weight: bold;
-  }
-  
-  .profile-email {
-    font-size: 16px;
-  }
-  
-  .profile-bio {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  
-  .booked-shows {
-    margin-top: 20px;
-  }
-  
-  .booked-show {
-    margin-bottom: 10px;
-  }
-  
-  .booked-show-title {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .booked-show-date {
-    font-size: 16px;
-  }
-  
-  .booked-show-time {
-    font-size: 14px;
-  }
+  display: flex;
+  flex-direction: column;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+}
+
+.seat {
+  display: inline-block;
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+.booked {
+  background-color: #ccc;
+}
+
+.empty-seat {
+  display: inline-block;
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid #a81e1e;
+  border-radius: 3px;
+  background-color: #f4ad12;
+}
+
+.profile-page {
+  margin: 0 auto;
+  width: 500px;
+  min-height: 100vh;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 20px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-info {
+  margin-top: 20px;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.profile-email {
+  font-size: 16px;
+}
+
+.profile-bio {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.booked-shows {
+  margin-top: 20px;
+}
+
+.booked-show {
+  margin-bottom: 10px;
+}
+
+.booked-show-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.booked-show-date {
+  font-size: 16px;
+}
+
+.booked-show-time {
+  font-size: 14px;
+}
