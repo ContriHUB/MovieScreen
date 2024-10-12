@@ -10,6 +10,7 @@
 <body>
     <h1>Movie List</h1>
     <ul>
+
         {% for movie in movie_data_list %}
         <div style="padding: 10px;">
             <li>{{ movie.movie.title }}</li>
@@ -41,6 +42,7 @@
         {% empty %}
         <li>No movies available.</li>
         {% endfor %}
+
     </ul>
 </body>
 {% endblock %}
