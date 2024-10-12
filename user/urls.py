@@ -10,9 +10,9 @@ urlpatterns = [
     # Redirect root URL to /shows/
      path('', redirect_to_shows, name='redirect_to_shows'),
 
-    path('user/shows/', shows, name='shows'),
-    path('user/add_movie/', add_movie, name='add_movie'),
-    path('user/movie_list/', movie_list, name='movie_list'),
-    path('user/add_show/', AddShowView.as_view(), name='add_show_view'),
-    path('user/autocomplete/', MovieAutocomplete.as_view(), name='movie_autocomplete'),
+    path('shows/', shows, name='shows'),
+    path('add_movie/', add_movie, name='add_movie'),
+    path('movie_list/', movie_list, name='movie_list'),
+    path('add_show/', AddShowView.as_view(), name='add_show_view'),
+    path('autocomplete/', MovieAutocomplete.as_view(), name='movie_autocomplete'),
 ]
