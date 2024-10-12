@@ -16,6 +16,7 @@
             {% if request.user.is_authenticated %}
             {% if request.user.is_staff %}
             <a class="nav-item nav-link " href="{% url 'user:add_movie' %}">Add Movie</a>
+            <a class="nav-item nav-link " href="{% url 'user:AddShowView' %}">Add Show</a>
             {% endif %}
             <a class="nav-item nav-link" href="{% url 'user:shows' %}">Shows</a>
             <a class="nav-item nav-link" href="{% url 'user:movie_list' %}">Movie List</a>
