@@ -1,10 +1,10 @@
 import requests
 import os
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from .models import Show, Movies, Ticket
 from django.utils import timezone
-from .forms import ShowForm
+from .forms import ShowForm,UserRatingForm
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
@@ -56,7 +56,14 @@ def add_movie(request):
 
             if data['Response'] == 'True':
                 description = data.get('Plot', 'No description available.')
-                poster_url = data.get('Poster')
+
+                poster_url = data.get('Poster') 
+                rating=data.get('imdbRating')
+                if rating=='N/A':
+                    rating=0
+                rating = float(rating)
+                stars = (rating / 10) * 5
+                stars = round(stars * 2) / 2
 
                 # Downloading the image 
                 img_temp = NamedTemporaryFile()
@@ -68,7 +75,8 @@ def add_movie(request):
                 movie = Movies.objects.create(
                     title=title,
                     description=description,
-                    available=True
+                    available=True,
+                    stars=stars
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
                 movie.save()
@@ -86,7 +94,45 @@ def add_movie(request):
 
 def movie_list(request):
     movies = Movies.objects.all()
-    return render(request, 'movie_list.html', {'movies': movies})
+    
+    movie_data_list = []
+    
+    for movie in movies:
+        
+        latest_rating = movie.user_ratings.first()  
+        movie_data = {
+            'movie': movie,
+            'latest_rating': latest_rating.stars if latest_rating else None, 
+        }
+        
+        movie_data_list.append(movie_data)
+
+    return render(request, 'movie_list.html', {'movie_data_list': movie_data_list})
+
+def movie_review(request, movie_id):
+    movie = get_object_or_404(Movies, id=movie_id) 
+    if request.method == 'POST':
+        form = UserRatingForm(request.POST)
+        if form.is_valid():
+            user_rating = form.save(commit=False)
+            user_rating.movie = movie 
+            existing_rating = movie.user_ratings.all() 
+            if existing_rating:
+                existing_rating.delete() 
+
+            user_rating.save() 
+            return redirect('user:movie_list') 
+    else:
+        form = UserRatingForm() 
+
+    context = {
+        'movie': movie,
+        'latest_rating': movie.user_ratings.first(),  
+        'form': form,
+    }
+
+    return render(request, 'review.html', context)  
+
 
 @method_decorator(staff_member_required, name="dispatch")
 class AddShowView(View):
@@ -155,3 +201,5 @@ def book_ticket(request, show_id):
         return redirect('user:shows')
 
     return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats})
+
+
