@@ -63,13 +63,101 @@ nav a:hover {
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
+  margin-left: 40px;
+  color:#333
+}
+#containerAdd{
+margin-left: 25px;
+margin-top: 10px;
+max-width: 1200px;
+padding: 10px 10px 10px 10px ;
+display: flex;
 }
 
+#texti{
+font-size: medium;
+font-weight: 500;
+font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#title{
+width: 100%;
+padding: 12px 20px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+#descriptionTexti{
+font-size: medium;
+font-weight: 500;
+font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#description{
+width: 100%;
+padding: 12px 20px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+#poster{
+width: 100%;
+padding: 12px 20px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+#available{
+padding: 12px 20px;
+margin: 8px 0;
+}
 h2 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
+.submitButton{
+background-color:#333;
+border: none;
+color: white;
+padding: 16px 32px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+transition-duration: 0.4s;
+cursor: pointer;
+}
 
+.submitButton:hover {
+background-color: #c0bebe78;
+color: rgb(9, 9, 9);
+}
+li{
+font-size: medium;
+font-family: Arial, Helvetica, sans-serif;
+}
+img {
+border: 1px solid #ddd;
+border-radius: 4px;
+padding: 5px;
+width: 250px;
+height: 200px;
+}
+img:hover {
+box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+#textTitle{
+font-size: larger;
+font-weight: bold;
+font-family: 'Times New Roman', Times, serif;
+list-style-type: square;
+}
 p {
   font-size: 1rem;
   line-height: 1.5;
@@ -108,7 +196,6 @@ p {
   border-radius: 3px;
   background-color: #f4ad12;
 }
-
 .profile-page {
   margin: 0 auto;
   width: 500px;
@@ -130,7 +217,6 @@ p {
   justify-content: center;
   align-items: center;
 }
-
 .profile-info {
   margin-top: 20px;
 }
