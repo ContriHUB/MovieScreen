@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static "auth/form.css" %}">
+<link rel="stylesheet" href="{% static "auth/message.css" %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<div class='container'>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="{{message.tags}} message">{{message}}</div>
+    {% endfor %}
+  {% endif %}
+<form action="{% url "user:login" %}" method="post">
+  {% csrf_token %}
+  <h2>Login</h2>
+  <div class="sep"></div>
+  <div class="input-field">
+    <input name="username" type="text" spellcheck="false" required />
+    <label>Username</label>
+    
+  </div>
+  <div class="input-field">
+    <input name="password" type="password" required />
+    <label>Password</label>
+    <button class='pass-btn'><img src="{% static "auth/eye-solid.svg" %}" alt="password toggle"></button>
+  </div>
+  <input type="submit" value="Login" />
+  <div class="sep"></div>
+    <p class="signup">Don't have an account? <a href="{% url "user:sign_up" %}">Sign Up</a></p>
+
+</form>
+</div>
+{% endblock %}
+{% block script-block %}
+<script src="{% static "auth/auth.js" %}"></script>
+{% endblock script-block %}
