@@ -15,13 +15,18 @@ from dotenv import load_dotenv
 load_dotenv()
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
+from django.contrib.auth import login,logout,authenticate
+from django.contrib import messages
 
 API_KEY = os.getenv('API_KEY')
 
+@login_required
 def shows(request):
     shows = Show.objects.all().order_by('-time')
     return render(request, 'shows.html', {'shows': shows})
 
+@method_decorator(login_required, name="dispatch")
 class MovieAutocomplete(View):
     def get(self, request):
         query = request.GET.get('query', '')
@@ -40,6 +45,7 @@ class MovieAutocomplete(View):
                 return JsonResponse([], safe=False)
         return JsonResponse([], safe=False)
 
+@login_required
 @staff_member_required
 def add_movie(request):
     if request.method == 'POST':
@@ -84,10 +90,12 @@ def add_movie(request):
     else:
         return render(request, 'add_movie.html')
 
+@login_required
 def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
 
+@method_decorator(login_required, name="dispatch")
 @method_decorator(staff_member_required, name="dispatch")
 class AddShowView(View):
     form_class = ShowForm
@@ -155,3 +163,53 @@ def book_ticket(request, show_id):
         return redirect('user:shows')
 
     return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats})
+
+def login_view(request):
+    if request.user.is_authenticated:
+            return redirect('user:shows')
+    if request.method == "GET":
+        return render(request,"login.html")
+    cred = request.POST
+    username = cred.get("username", "")
+    password = cred.get("password", "")
+    if not (User.objects.filter(username=username).exists()):
+        messages.add_message(request,messages.WARNING,"No user by this username!")
+        return redirect("user:login")
+    if user := authenticate(request=request, username=username, password=password):
+        login(request,user)
+        return redirect("user:shows")
+    
+    messages.add_message(request,messages.ERROR,"Incorrect password!")
+    return redirect("user:login")
+
+
+def sign_up(request):
+    if request.user.is_authenticated:
+            return redirect('user:shows')
+
+    if request.method=='GET':
+        return render(request,"sign_up.html")
+    
+    cred=request.POST
+    username = cred.get("username", "")
+    password = cred.get("password", "")
+    confirm = cred.get("confirm_password", "")
+    if User.objects.filter(username=username):
+        messages.add_message(request,messages.INFO,"User by this name already exists!")
+        return redirect('user:sign_up')
+    if password!= confirm != '':
+        messages.add_message(request,messages.ERROR,"Password don't match up!")
+        return redirect('user:sign_up')
+        
+    user = User.objects.create(username=username)
+    user.set_password(password)
+    user.save()
+    messages.add_message(request,messages.SUCCESS,"You successfully signed up!")
+    
+    return redirect("user:login")
+
+
+def logout_view(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('user:login')

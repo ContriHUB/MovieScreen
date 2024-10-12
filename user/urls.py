@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 
-from .views import shows,add_movie,AddShowView,MovieAutocomplete,movie_list,book_ticket
+from .views import shows,add_movie,AddShowView,MovieAutocomplete,movie_list,book_ticket,login_view,sign_up,logout_view
 
 urlpatterns = [
     
@@ -14,6 +14,9 @@ urlpatterns = [
     path('add_show/', AddShowView.as_view(), name='AddShowView'),
     path('book_ticket/<int:show_id>/', book_ticket, name='book_ticket'),
     path('autocomplete/', MovieAutocomplete.as_view(), name='movie_autocomplete'),
+    path('login/',login_view,name='login'),
+    path('sign_up/',sign_up,name='sign_up'),
+    path('logout/',logout_view,name='logout'),
 
     
 ]
