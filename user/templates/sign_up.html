@@ -14,13 +14,17 @@
       <div class="{{message.tags}} message">{{message}}</div>
     {% endfor %}
   {% endif %}
-<form action="{% url "user:sign_up" %}" method="post">
+<form action="{% url "user:sign_up" %}" method="post" class='sign-up-form'>
   {% csrf_token %}
   <h2>Sign Up</h2>
   <div class="sep"></div>
   <div class="input-field">
     <input name='username' type="text" spellcheck="false" required />
     <label>Username</label>
+  </div>
+  <div class="input-field">
+    <input name='email' type="text" spellcheck="false" required />
+    <label>Email</label>
   </div>
   <div class="input-field">
     <input name='password' type="password" required />
