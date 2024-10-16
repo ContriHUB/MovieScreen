@@ -7,6 +7,10 @@ class Movies(models.Model):
     description = models.TextField()
     poster = models.ImageField(upload_to='movie_posters/')
     available = models.BooleanField(default=True)
+    imdb_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
+    critic_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
+    user_rating = models.FloatField(null=True, blank=True, default=0.0)
+    rating_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title

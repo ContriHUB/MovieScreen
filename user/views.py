@@ -1,7 +1,7 @@
 import requests
 import os
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Show, Movies, Ticket
 from django.utils import timezone
 from .forms import ShowForm
@@ -63,6 +63,24 @@ def add_movie(request):
             if data['Response'] == 'True':
                 description = data.get('Plot', 'No description available.')
                 poster_url = data.get('Poster')
+                imdb_rating = None
+                critic_rating = None
+
+                ratings = data.get('Ratings', [])
+
+                for rating in ratings:
+                    source = rating['Source']
+                    value = rating['Value']
+
+                    if source == 'Internet Movie Database':
+                        imdb_rating = float(value.split('/')[0]) / 2  
+                        print('imdb')
+
+                    elif source == 'Metacritic':
+                        critic_rating = float(value.split('/')[0]) / 20 
+                        print('critic')
+                    
+
 
                 # Downloading the image 
                 img_temp = NamedTemporaryFile()
@@ -74,7 +92,9 @@ def add_movie(request):
                 movie = Movies.objects.create(
                     title=title,
                     description=description,
-                    available=True
+                    available=True,
+                    imdb_rating=round(imdb_rating, 1) if imdb_rating else None,
+                    critic_rating=round(critic_rating, 1) if critic_rating else None
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
                 movie.save()
@@ -95,6 +115,7 @@ def movie_list(request):
     movies = Movies.objects.all()
     return render(request, 'movie_list.html', {'movies': movies})
 
+
 @method_decorator(login_required, name="dispatch")
 @method_decorator(staff_member_required, name="dispatch")
 class AddShowView(View):
@@ -111,6 +132,7 @@ class AddShowView(View):
             form.save()
             return redirect('user:shows')
         return render(request, self.template_name, {'form': form})
+
 
 @login_required
 def book_ticket(request, show_id):
@@ -213,3 +235,25 @@ def logout_view(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('user:login')
+
+
+#function to input user rating 
+def submit_rating(request, movie_id):
+    if request.method == 'POST':
+        user_rating = float(request.POST.get('user_rating'))
+        movie = Movies.objects.get(id=movie_id)
+
+        print(f"User Rating: {user_rating}, Movie ID: {movie_id}")  # Debugging line
+
+        # Update user rating and count
+        if movie.user_rating is not None:
+            movie.user_rating = (movie.user_rating * movie.rating_count + user_rating) / (movie.rating_count + 1)
+            movie.rating_count += 1
+        else:
+            movie.user_rating = user_rating
+            movie.rating_count = 1
+
+        movie.save()
+        return redirect('user:movie_list')
+
+    return redirect('user:movie_list')  # Handle non-POST requests safely
