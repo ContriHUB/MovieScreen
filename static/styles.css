@@ -53,12 +53,6 @@ nav a:hover {
   background-color: rgba(240, 248, 255, 0.15);
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
@@ -260,4 +254,99 @@ p {
 .fa-star-half-alt {
   color: gold;
   margin-right: 2px;
+}
+
+.seats {
+  background-color: #444451;
+  height: 25px;
+  width: 30px;
+  margin: 5px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 1px solid rgb(151, 151, 151);
+}
+
+.seats.selected {
+  background-color: #6feaf6;
+  color: black;
+}
+
+.seats.occupied {
+  background-color: #fff;
+  color: black;
+}
+
+.seats:nth-of-type(2) {
+  margin-right: 35px;
+}
+
+.seats:nth-last-of-type(2) {
+  margin-left: 35px;
+}
+
+.seats:not(.occupied):hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.showcase .seats:not(.occupied):hover {
+  cursor: default;
+  transform: scale(1);
+}
+
+.showcase {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #777;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  width: 350px;
+  margin-top: 20px;
+  margin-left: 37rem;
+}
+
+.showcase li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.showcase li small {
+  margin-left: 2px;
+}
+
+.row {
+  display: flex;
+}
+
+p.text {
+  margin: 5px 0;
+}
+
+p.text span {
+  color: #6feaf6;
+}
+
+.book {
+  margin-left: 34rem;
+  font-size: 2.3rem;
+  margin-top: 15px;
+  color: white;
+}
+
+.screen {
+  background-color: #fff;
+  height: 50px;
+  width: 500px;
+  margin: 10px 33rem;
+  transform: rotateX(-45deg);
+  box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
+}
+
+.showcase .seats {
+  height: 20px;
+  width: 25px;
 }

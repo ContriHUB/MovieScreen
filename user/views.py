@@ -140,9 +140,12 @@ def book_ticket(request, show_id):
 
     # Get the list of seats that are already booked for this show
     booked_seats = Ticket.objects.filter(show=show).values_list('seat_number', flat=True)
+    booked__seats = list(map(int, Ticket.objects.filter(show=show).values_list('seat_number', flat=True)))
 
     # Seat numbers from 1 to 100
     total_seats = range(1, 101)
+    all_seats = list(range(1, 101))
+    seat_rows = [all_seats[i:i+10] for i in range(0, len(all_seats), 10)]
 
     # Filter available seats (those not in the booked_seats list)
     available_seats = [seat for seat in total_seats if str(seat) not in booked_seats]
@@ -184,7 +187,7 @@ def book_ticket(request, show_id):
         Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
         return redirect('user:shows')
 
-    return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats})
+    return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats, "booked_seats": booked__seats, "seat_rows": seat_rows})
 
 def login_view(request):
     if request.user.is_authenticated:
