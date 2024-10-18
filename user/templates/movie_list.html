@@ -1,22 +1,102 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% load star_rating %} {% block content %}
 <head>
-    <title>Movie List</title>
+  <title>Movie List</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+  />
 </head>
 <body>
-    <h1>Movie List</h1>
-    <ul>
-        {% for movie in movies %}
-    <div style="padding: 10px;">
-        <li id="textTitle">{{ movie.title }}</li>
-        <li>{{ movie.description }}</li>
-        <img src="{{ movie.poster.url }}" width="200px" height="100px" alt="{{ movie.title }} poster">
-        
+  <h1>Movie List</h1>
+  <ul>
+    {% for movie in movies %}
+    <div style="padding: 10px">
+      <li id="textTitle">{{ movie.title }}</li>
+      <li>{{ movie.description }}</li>
+      <img
+        src="{{ movie.poster.url }}"
+        width="200px"
+        height="100px"
+        alt="{{ movie.title }} poster"
+      />
+
+      <div>
+        <h4>IMDb Rating:</h4>
+        <span class="stars">{{ movie.imdb_rating|fa_star_rating|safe }}</span>
+      </div>
+
+      <div>
+        <h4>Critic Rating:</h4>
+        <span class="stars">{{ movie.critic_rating|fa_star_rating|safe }}</span>
+      </div>
+      <div>
+        <h4>Average User Rating:</h4>
+        <div class="stars">
+          {{ movie.user_rating|fa_star_rating|safe }} ({{ movie.rating_count }})
+        </div>
+      </div>
+      <br />
+      <div>
+        <h4>Submit Rating:</h4>
+        <div class="movie" data-movie-id="{{ movie.id }}">
+          <form
+            method="POST"
+            action="{% url 'user:submit_rating' movie.id %}"
+            class="rating-form"
+          >
+            {% csrf_token %}
+            <div class="user-rating" style="display: flex; cursor: pointer">
+              <i class="far fa-star" data-value="1"></i>
+              <i class="far fa-star" data-value="2"></i>
+              <i class="far fa-star" data-value="3"></i>
+              <i class="far fa-star" data-value="4"></i>
+              <i class="far fa-star" data-value="5"></i>
+            </div>
+            <input
+              type="hidden"
+              name="user_rating"
+              id="user_rating_{{ movie.id }}"
+              value="0"
+            />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
     </div>
     {% empty %}
     <li>No movies available.</li>
     {% endfor %}
-    </ul>
+  </ul>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const movieContainers = document.querySelectorAll(".movie");
+
+      movieContainers.forEach((container) => {
+        const stars = container.querySelectorAll(".user-rating i");
+        const hiddenInput = container.querySelector(
+          'input[name="user_rating"]'
+        );
+
+        stars.forEach((star, index) => {
+          star.addEventListener("click", () => {
+            // Update the user rating
+            stars.forEach((s, i) => {
+              if (i <= index) {
+                s.classList.add("fas"); // Filled star
+                s.classList.remove("far");
+              } else {
+                s.classList.remove("fas");
+                s.classList.add("far"); // Empty star
+              }
+            });
+
+            // Set the hidden input value to the rating
+            hiddenInput.value = index + 1; // Set the rating based on index
+          });
+        });
+      });
+    });
+  </script>
 </body>
 {% endblock %}
