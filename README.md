@@ -93,17 +93,9 @@ touch .env
 ```
 2. Add your OMDB API key to the .env file:
 ```bash
-OMDB_API_KEY=your_api_key_here
+API_KEY=os.getenv('Secret key')
 ```
-3. In your Django settings or configuration file, load the API key from the .env file:
- ```bash
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-OMDB_API_KEY = os.getenv("OMDB_API_KEY")
-```  
-4. Use the OMDB_API_KEY in your code when making API requests.
+3. Use the API_KEY in your code when making API requests.
 
 
 ## Contributing 
