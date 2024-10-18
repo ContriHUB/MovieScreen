@@ -84,3 +84,16 @@ While adding packages, update requirements.
 ```bash
 pip freeze > requirements.txt
 ```
+## Email config
+1. Let most of the email setting as they are.
+2. For EMAIL_HOST_USER & DEFAULT_FROM_EMAIL set the mail account you want to send mail from
+3. Go to the google manage account for the email you set
+    - Enable 2 step verification
+    - Generate a HOST_PASSWORD from app password in the gmail account
+4. set EMAIL_HOST_PASSWORD to the app password you generated
+
+[Setup Tutorial Refference](https://www.geeksforgeeks.org/setup-sending-email-in-django-project/)
+
+### Note: 
+Make sure of the spellcheck.\
+Might not work with proxy so try using you cellular network
