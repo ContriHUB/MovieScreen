@@ -76,6 +76,8 @@ Before coding, you need to install Django in your virtual environment:
 pip install django
 ```
 
+
+
 ##    Connecting to the OMDB API
 To fetch movie data from OMDB, you need to create an API key. Follow these steps:
 1. Go to the OMDB API website: https://www.omdbapi.com
@@ -93,10 +95,9 @@ touch .env
 ```
 2. Add your OMDB API key to the .env file:
 ```bash
-API_KEY=os.getenv('Secret key')
+ API_KEY=os.getenv('Secret key')
 ```
 3. Use the API_KEY in your code when making API requests.
-
 
 ## Contributing 
 While raing the pull request, add ypur name to the CONTRIBUTORS.md file
