@@ -18,6 +18,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 API_KEY = os.getenv('API_KEY')
 
@@ -160,6 +162,13 @@ def book_ticket(request, show_id):
 
         # Book the ticket if everything is valid
         Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
+        send_mail(
+            "Ticket confirmation!",
+            f"We're pleased to inform you {request.user.username}\nYour Seat is confirmend\nYour seat no is: {seat_number}",
+            settings.EMAIL_HOST_USER,
+            [request.user.email],
+        )
+
         return redirect('user:shows')
 
     return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats})
@@ -192,6 +201,7 @@ def sign_up(request):
     
     cred=request.POST
     username = cred.get("username", "")
+    email = cred.get("email", "")
     password = cred.get("password", "")
     confirm = cred.get("confirm_password", "")
     if User.objects.filter(username=username):
@@ -202,6 +212,7 @@ def sign_up(request):
         return redirect('user:sign_up')
         
     user = User.objects.create(username=username)
+    user.email=email
     user.set_password(password)
     user.save()
     messages.add_message(request,messages.SUCCESS,"You successfully signed up!")
