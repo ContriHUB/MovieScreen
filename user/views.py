@@ -142,6 +142,10 @@ def book_ticket(request, show_id):
     booked_seats = Ticket.objects.filter(show=show).values_list('seat_number', flat=True)
     booked__seats = list(map(int, Ticket.objects.filter(show=show).values_list('seat_number', flat=True)))
 
+    booked_percentage = booked_seats.count()
+    #condition to check whether to show notification or not
+    show_toastr = booked_percentage >= 85
+
     # Seat numbers from 1 to 100
     total_seats = range(1, 101)
     all_seats = list(range(1, 101))
@@ -150,15 +154,18 @@ def book_ticket(request, show_id):
     # Filter available seats (those not in the booked_seats list)
     available_seats = [seat for seat in total_seats if str(seat) not in booked_seats]
 
-    if request.method == 'POST':
-        seat_number = request.POST.get('seat_number')
 
-        # Check if the user has already booked this seat for the selected show
-        if Ticket.objects.filter(user=request.user, show=show, seat_number=seat_number).exists():
+    if request.method == 'POST':
+        seat_numbers = request.POST.getlist('seat_numbers')  # Get the list of selected seats
+
+        # Check if user has already booked these seats for the selected show
+        existing_bookings = Ticket.objects.filter(user=request.user, show=show, seat_number__in=seat_numbers)
+
+        if existing_bookings.exists():
             return render(request, 'book_ticket.html', {
-                'show': show, 
-                'available_seats': available_seats, 
-                'error': 'You have already booked this seat.'
+                'show': show,
+                'available_seats': available_seats,
+                'error': 'You have already booked one or more of these seats.'
             })
 
         # Check if the user has already booked 2 tickets in the current month
@@ -168,26 +175,36 @@ def book_ticket(request, show_id):
             booked_at__year=timezone.now().year
         ).count()
 
-        if ticket_count >= 2:
+        if ticket_count + len(seat_numbers) > 2:
             return render(request, 'book_ticket.html', {
-                'show': show, 
-                'available_seats': available_seats, 
+                'show': show,
+                'available_seats': available_seats,
                 'error': 'You can only book up to 2 tickets per month.'
             })
 
-        # Ensure the selected seat is in the list of available seats
-        if seat_number not in map(str, available_seats):
+        # Ensure all selected seats are available
+        unavailable_seats = [seat for seat in seat_numbers if seat not in map(str, available_seats)]
+        if unavailable_seats:
             return render(request, 'book_ticket.html', {
-                'show': show, 
-                'available_seats': available_seats, 
-                'error': 'This seat is already booked or unavailable.'
+                'show': show,
+                'available_seats': available_seats,
+                'error': 'One or more selected seats are unavailable.'
             })
 
-        # Book the ticket if everything is valid
-        Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
+        # Book the tickets for selected seats
+        for seat_number in seat_numbers:
+            Ticket.objects.create(user=request.user, show=show, seat_number=seat_number)
+
         return redirect('user:shows')
 
-    return render(request, 'book_ticket.html', {'show': show, 'available_seats': available_seats, "booked_seats": booked__seats, "seat_rows": seat_rows})
+    return render(request, 'book_ticket.html', {
+        'show': show,
+        'available_seats': available_seats,
+        'booked_seats': booked__seats,
+        'seat_rows': seat_rows,
+        'show_toastr': show_toastr
+    })
+
 
 def login_view(request):
     if request.user.is_authenticated:

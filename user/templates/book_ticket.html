@@ -22,7 +22,6 @@
 
     .btn {
       margin-top: 15px;
-      margin-left: 45rem;
       height: 30px;
       width: 128px;
       border: 1px solid black;
@@ -30,6 +29,20 @@
       padding-left: 10px;
       padding-top: 5px;
       border-radius: 15px;
+      margin-right: 30px;
+      margin-left: 30px;
+    }
+
+    .btn-submit {
+      margin-top: 15px;
+      height: 30px;
+      width: 128px;
+      border: 1px solid black;
+      background-color: white;
+      border-radius: 15px;
+      margin-right: 30px;
+      margin-left: 30px;
+      font-size: 17px;
     }
 
     a {
@@ -51,6 +64,11 @@
       color: azure;
       font-size: 10px;
     }
+
+    .button-container {
+      display: flex;
+      align-items: center;
+    }
   </style>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
@@ -68,17 +86,6 @@
 {% if error %}
 <p style="color: red">{{ error }}</p>
 {% endif %}
-
-<form method="POST">
-  {% csrf_token %}
-  <label for="seat_number">Select Seat Number:</label>
-  <select id="seat_number" name="seat_number" required>
-    {% for seat in available_seats %}
-    <option value="{{ seat }}">{{ seat }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit">Book Ticket</button>
-</form>
 
 <ul class="showcase">
   <li>
@@ -101,7 +108,10 @@
   {% for row in seat_rows %}
   <div class="row">
     {% for seat in row %}
-    <div class="seats {% if seat in booked_seats %}occupied{% endif %}">
+    <div
+      class="seats {% if seat in booked_seats %}occupied{% endif %}"
+      data-seat-number="{{ seat }}"
+    >
       {{ seat }}
     </div>
     {% endfor %}
@@ -109,14 +119,25 @@
   {% endfor %}
 </div>
 
-<div class="btn"><a href="{% url 'user:shows' %}">Back to Shows</a></div>
+<div class="button-container">
+  <form method="POST" id="booking-form">
+    {% csrf_token %}
+    <button class="btn-submit" type="submit">Book Tickets</button>
+  </form>
+
+  <div class="btn"><a href="{% url 'user:shows' %}">Back to Shows</a></div>
+</div>
 
 <script>
-  toastr.info("Seats filling up fast. Grab yours now");
+  const showToastr = "{{ show_toastr|yesno:'true,false' }}";
+
+  if (showToastr) {
+    oastr.info("Seats filling up fast. Grab yours now!");
+  }
 </script>
 <script>
   const container = document.querySelector(".container");
-  const seats = document.querySelectorAll(".row .seats:not(.occupied)");
+  const bookingForm = document.getElementById("booking-form");
 
   container.addEventListener("click", (e) => {
     if (
@@ -125,6 +146,30 @@
     ) {
       e.target.classList.toggle("selected");
     }
+  });
+
+  bookingForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    const selectedSeats = Array.from(
+      container.querySelectorAll(".selected")
+    ).map((seat) => seat.dataset.seatNumber);
+
+    if (selectedSeats.length === 0) {
+      alert("Please select at least one seat.");
+      return;
+    }
+
+    // Create a hidden input for each selected seat number
+    selectedSeats.forEach((seatNumber) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "seat_numbers"; // Use plural to indicate multiple seats
+      input.value = seatNumber;
+      bookingForm.appendChild(input);
+    });
+
+    bookingForm.submit(); // Now submit the form with selected seats
   });
 </script>
 {% endblock %}
