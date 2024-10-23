@@ -1,22 +1,175 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<head>
+  <title>Book Tickets</title>
+  <style>
+    body {
+      background-color: #242333;
+    }
 
-{% block content %}
-<h1>Book Ticket for {{ show.movie.title }}</h1>
+    small {
+      color: white;
+    }
+
+    form {
+      font-size: 1rem;
+      margin-left: 38rem;
+      color: white;
+    }
+
+    .row {
+      margin-left: 34.5rem;
+    }
+
+    .btn {
+      margin-top: 15px;
+      height: 30px;
+      width: 128px;
+      border: 1px solid black;
+      background-color: white;
+      padding-left: 10px;
+      padding-top: 5px;
+      border-radius: 15px;
+      margin-right: 30px;
+      margin-left: 30px;
+    }
+
+    .btn-submit {
+      margin-top: 15px;
+      height: 30px;
+      width: 128px;
+      border: 1px solid black;
+      background-color: white;
+      border-radius: 15px;
+      margin-right: 30px;
+      margin-left: 30px;
+      font-size: 17px;
+    }
+
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    .screen {
+      background-color: #fff;
+      height: 100px;
+      width: 400px;
+      margin: 10px 36rem;
+      transform: rotateX(-45deg);
+      box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
+    }
+
+    .seats {
+      padding: 8px 8px;
+      color: azure;
+      font-size: 10px;
+    }
+
+    .button-container {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+</head>
+<h1 class="book">Book Ticket for {{ show.movie.title }}</h1>
 
 {% if error %}
-    <p style="color: red;">{{ error }}</p>
+<p style="color: red">{{ error }}</p>
 {% endif %}
 
-<form method="POST">
-    {% csrf_token %}
-    <label for="seat_number">Select Seat Number:</label>
-    <select id="seat_number" name="seat_number" required>
-        {% for seat in available_seats %}
-            <option value="{{ seat }}">{{ seat }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit">Book Ticket</button>
-</form>
+<ul class="showcase">
+  <li>
+    <div class="seats"></div>
+    <small>Available</small>
+  </li>
+  <li>
+    <div class="seats selected"></div>
+    <small>Selected</small>
+  </li>
+  <li>
+    <div class="seats occupied"></div>
+    <small>Occupied</small>
+  </li>
+</ul>
 
-<a href="{% url 'user:shows' %}">Back to Shows</a> 
+<div class="container">
+  <div class="screen"></div>
+
+  {% for row in seat_rows %}
+  <div class="row">
+    {% for seat in row %}
+    <div
+      class="seats {% if seat in booked_seats %}occupied{% endif %}"
+      data-seat-number="{{ seat }}"
+    >
+      {{ seat }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+<div class="button-container">
+  <form method="POST" id="booking-form">
+    {% csrf_token %}
+    <button class="btn-submit" type="submit">Book Tickets</button>
+  </form>
+
+  <div class="btn"><a href="{% url 'user:shows' %}">Back to Shows</a></div>
+</div>
+
+<script>
+  const showToastr = "{{ show_toastr|yesno:'true,false' }}";
+
+  if (showToastr) {
+    oastr.info("Seats filling up fast. Grab yours now!");
+  }
+</script>
+<script>
+  const container = document.querySelector(".container");
+  const bookingForm = document.getElementById("booking-form");
+
+  container.addEventListener("click", (e) => {
+    if (
+      e.target.classList.contains("seats") &&
+      !e.target.classList.contains("occupied")
+    ) {
+      e.target.classList.toggle("selected");
+    }
+  });
+
+  bookingForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    const selectedSeats = Array.from(
+      container.querySelectorAll(".selected")
+    ).map((seat) => seat.dataset.seatNumber);
+
+    if (selectedSeats.length === 0) {
+      alert("Please select at least one seat.");
+      return;
+    }
+
+    // Create a hidden input for each selected seat number
+    selectedSeats.forEach((seatNumber) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "seat_numbers"; // Use plural to indicate multiple seats
+      input.value = seatNumber;
+      bookingForm.appendChild(input);
+    });
+
+    bookingForm.submit(); // Now submit the form with selected seats
+  });
+</script>
 {% endblock %}
