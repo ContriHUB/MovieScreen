@@ -55,7 +55,8 @@ def movie_details(request):
             filtered_cast = [
                 {
                     'name': member['name'],
-                    'character': member['character']
+                    'character': member['character'],
+                    'img_url' : f'https://image.tmdb.org/t/p/w200{member['profile_path']}'
                 }
                 for member in data['cast'][:croplen] if member['character']
             ]

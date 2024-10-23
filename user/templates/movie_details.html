@@ -30,8 +30,11 @@
             <ul class="cast-list">
                 {% for person in cast %}
                 <li class="cast-item">
-                    <div class="actor">{{person.name}}</div>
-                    <div class="character">{{person.character}}</div>
+                    <div class="image-wrapper"><img src="{{person.img_url}}" alt="" class="cast-profile"></div>
+                    <div class="cast-names">
+                        <div class="actor">{{person.name}}</div>
+                        <div class="character">{{person.character}}</div>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>
