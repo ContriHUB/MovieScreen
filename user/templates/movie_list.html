@@ -7,18 +7,22 @@
   />
 </head>
 <body>
-  <h1>Movie List</h1>
-  <ul>
+  <h1 class="main-heading">Movie List</h1>
+  <ul class="movie-list">
     {% for movie in movies %}
     <div style="padding: 10px">
       <li id="textTitle">{{ movie.title }}</li>
       <li>{{ movie.description }}</li>
-      <img
-        src="{{ movie.poster.url }}"
-        width="200px"
-        height="100px"
-        alt="{{ movie.title }} poster"
-      />
+
+      <a href="{% url 'user:movie_details' %}?imdb_id={{movie.imdb_id}}">
+        <img
+          class="click-poster"
+          src="{{ movie.poster.url }}"
+          width="200px"
+          height="100px"
+          alt="{{ movie.title }} poster"
+        />
+      </a>
 
       <div>
         <h4>IMDb Rating:</h4>
@@ -67,7 +71,6 @@
     <li>No movies available.</li>
     {% endfor %}
   </ul>
-
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const movieContainers = document.querySelectorAll(".movie");

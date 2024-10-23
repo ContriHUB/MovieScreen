@@ -1,4 +1,5 @@
 myvenv/
+.env
 /movie/__pycache__/
 /db.sqlite3
 /user/__pycache__/

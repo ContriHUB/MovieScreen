@@ -5,13 +5,13 @@
     <title>Shows List</title>
 </head>
 <body>
-    <h1>Show List</h1>
-    <ul>
+    <h1 class="main-heading">Show List</h1>
+    <ul class="movie-list">
         {% for show in shows %}
             <div style="padding: 10px;">
                 <li id="textTitle">{{ show.movie.title }}</li> 
                 <li>{{ show.time }}</li> 
-                <img src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
+                <img class="click-poster" src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
                 <!-- Add the 'Book Ticket' link for each show -->
                 <li><a href="{% url 'user:book_ticket' show.id %}">Book Ticket</a></li>
             </div>
