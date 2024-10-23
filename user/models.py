@@ -13,6 +13,10 @@ class Movies(models.Model):
     genres=models.TextField(default="")
     age_rating=models.CharField(max_length=10,default="")
     imdb_id=models.CharField(max_length=20,default="")
+    imdb_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
+    critic_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
+    user_rating = models.FloatField(null=True, blank=True, default=0.0)
+    rating_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
