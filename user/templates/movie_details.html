@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for obj in movie %}
+<head>
+    {%block title%}<title>{{obj.title}}</title>{%endblock%}
+</head>
+<body>
+    <div class="main-container">
+        <div class="details-container">
+            <div class="grid-2-cols">
+                <img class="movie-poster" src="{{obj.poster.url}}" alt="">
+                <h1 class="movie-title"><p>{{obj.title}}</p></h1>
+                <div class="movie-details">
+                    <ul>
+                        <li>Runtime: {{obj.runtime}}</li>
+                        <li>Release Date: {{obj.rel_date}}</li>
+                        <li>Age Rating: {{obj.age_rating}}</li>
+                        <li>Director: {{obj.director}}</li>
+                        <li>Genre: {{obj.genres}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="movie-description">
+                <p>{{obj.description}}</p>
+            </div>
+        </div>
+        <div class="cast-container">
+            <h1 class="cast-head">Top Cast</h1>
+            {% if cast %}
+            <ul class="cast-list">
+                {% for person in cast %}
+                <li class="cast-item">
+                    <div class="actor">{{person.name}}</div>
+                    <div class="character">{{person.character}}</div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="cast-error">
+                NOT ABLE TO FETCH CAST
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+{%endfor%}
+{% endblock %}

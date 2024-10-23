@@ -7,6 +7,12 @@ class Movies(models.Model):
     description = models.TextField()
     poster = models.ImageField(upload_to='movie_posters/')
     available = models.BooleanField(default=True)
+    runtime=models.CharField(max_length=10,default="")
+    rel_date=models.CharField(max_length=10,default="")
+    director=models.CharField(max_length=100,default="")
+    genres=models.TextField(default="")
+    age_rating=models.CharField(max_length=10,default="")
+    imdb_id=models.CharField(max_length=20,default="")
 
     def __str__(self):
         return self.title
