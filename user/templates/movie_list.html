@@ -13,12 +13,13 @@
     <div style="padding: 10px">
       <li id="textTitle">{{ movie.title }}</li>
       <li>{{ movie.description }}</li>
-      <img
-        src="{{ movie.poster.url }}"
-        width="200px"
-        height="100px"
-        alt="{{ movie.title }} poster"
-      />
+      <a href="{% url "user:about_movie" %}?movie_name={{ movie.title }}">
+        <img
+          src="{{ movie.poster.url }}"
+          width="200px"
+          alt="{{ movie.title }} poster"
+        />
+      </a>
 
       <div>
         <h4>IMDb Rating:</h4>

@@ -2,7 +2,7 @@ import requests
 import os
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Show, Movies, Ticket
+from .models import Show, Movies, Ticket,Reviews
 from django.utils import timezone
 from .forms import ShowForm
 from django.views import View
@@ -20,6 +20,10 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from urllib.parse import urlencode
+from django.urls import reverse
+from datetime import datetime
+from better_profanity import profanity
 
 API_KEY = os.getenv('API_KEY')
 
@@ -267,7 +271,7 @@ def logout_view(request):
     return redirect('user:login')
 
 
-#function to input user rating 
+# function to input user rating
 def submit_rating(request, movie_id):
     if request.method == 'POST':
         user_rating = float(request.POST.get('user_rating'))
@@ -287,3 +291,50 @@ def submit_rating(request, movie_id):
         return redirect('user:movie_list')
 
     return redirect('user:movie_list')  # Handle non-POST requests safely
+
+@method_decorator(login_required, name="dispatch")
+class AboutMovie(View):
+
+    template_name="about_movie.html"
+
+    def get(self,request,*args, **kwargs):
+        movie_name= request.GET.get('movie_name')
+        if not Movies.objects.filter(title=movie_name).exists():
+            return render(request,'movie_not_found.html')
+        movie= Movies.objects.get(title= movie_name)
+        reviews = Reviews.objects.filter(review_of=movie)
+
+        can_review= False
+        if Ticket.objects.filter(user=request.user,show__movie=movie).exists():
+            ticket = Ticket.objects.get(
+                user=request.user, show__movie=movie
+            )
+            str_time_now = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+            str_movie_time = ticket.show.time.strftime("%d/%m/%Y, %H:%M:%S")
+            time_now = datetime.strptime(str_time_now, "%d/%m/%Y, %H:%M:%S")
+            movie_time = datetime.strptime(str_movie_time, "%d/%m/%Y, %H:%M:%S")
+
+            if time_now > movie_time:
+                can_review = not can_review
+
+        context = {
+            "movie": movie,
+            "reviews":reviews,
+            'can_review':can_review,
+        }
+        return render(request,self.template_name ,context=context)
+
+    def post(self,request,*args, **kwargs):
+        movie_name=request.POST.get("movie_name")
+        review=request.POST.get("review")
+        movie=Movies.objects.get(title=movie_name)
+        review=profanity.censor(review)
+
+        review=Reviews.objects.create(
+            review_content=review,
+            review_from=request.user,
+            review_of=movie
+        )
+        review.save()
+        url = f"{reverse('user:about_movie')}?{urlencode({'movie_name': movie_name})}"
+        return redirect(url)

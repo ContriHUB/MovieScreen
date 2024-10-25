@@ -4,3 +4,4 @@ myvenv/
 /user/__pycache__/
 /media/
 /user/migrations/
+.env
