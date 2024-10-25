@@ -20,6 +20,8 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.defaulttags import register
+from notebook.recommendation import recommend_similar_movies_model1 as get_similar_movies
 
 API_KEY = os.getenv('API_KEY')
 
@@ -96,7 +98,7 @@ def add_movie(request):
                     description=description,
                     available=True,
                     imdb_rating=round(imdb_rating, 1) if imdb_rating else None,
-                    critic_rating=round(critic_rating, 1) if critic_rating else None
+                    critic_rating=round(critic_rating, 1) if critic_rating else None,
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
                 movie.save()
@@ -111,11 +113,31 @@ def add_movie(request):
            return redirect('user:movie_list')
     else:
         return render(request, 'add_movie.html')
+    
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 @login_required
 def movie_list(request):
     movies = Movies.objects.all()
-    return render(request, 'movie_list.html', {'movies': movies})
+
+    # Fetching similar movies from KNN model
+    predicted_similar_movies = {}
+    for movie in movies:
+        try:
+            similar_movies_df = get_similar_movies(movie.title)
+            similar_movies = []
+            for index, row in similar_movies_df.iterrows():
+                similar_movies.append(row['title'])
+            predicted_similar_movies[movie.title] = similar_movies
+        except:
+            predicted_similar_movies[movie.title] = None
+
+    return render(request, 'movie_list.html', {
+        'movies': movies,
+        'similar_movies': predicted_similar_movies
+    })
 
 
 @method_decorator(login_required, name="dispatch")

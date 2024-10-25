@@ -62,6 +62,22 @@
           </form>
         </div>
       </div>
+
+      <!-- Similar Movies Section -->
+      <div>
+        <h4>Similar Movies:</h4>
+        {% if similar_movies|get_item:movie.title %}
+          <ul>
+            {% for similar_movie in similar_movies|get_item:movie.title %}
+              <li>{{ similar_movie }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No similar movies available for this title.</p>
+        {% endif %}
+      </div>
+      <!-- End of Similar Movies Section -->
+
     </div>
     {% empty %}
     <li>No movies available.</li>
