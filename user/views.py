@@ -21,7 +21,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.defaulttags import register
-from notebook.recommendation import recommend_similar_movies_model1 as get_similar_movies
+from notebook.recommender import recommend_by_genres
 
 API_KEY = os.getenv('API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
@@ -62,9 +62,29 @@ def movie_details(request):
                 }
                 for member in data['cast'][:croplen] if member['character']
             ]
+
+        # fetch similar movies
+        genres = list(map(lambda x: x.strip(), movie.first().genres.split(',')))
+        similar_movies = recommend_by_genres(genres)
+        similar_movies_poster_url = {}
+
+        def get_omdb_title(similar_movie):
+            title = similar_movie.split('(')[0].strip()
+            if title.endswith(", The"):
+                title = "The " + title[:-5].strip()
+            return title
+
+        for similar_movie in similar_movies:
+            title = get_omdb_title(similar_movie)
+            omdb_search_url = f"http://www.omdbapi.com/?apikey={API_KEY}&t={title}"
+            omdb_response = requests.get(omdb_search_url).json()
+            similar_movies_poster_url[similar_movie] = omdb_response.get('Poster')
+
         context={
             "movie":movie,
-            "cast":filtered_cast
+            "cast":filtered_cast,
+            "similar_movies":similar_movies,
+            "similar_movies_poster_url":similar_movies_poster_url
         }
 
     return render(request,'movie_details.html',context)
@@ -167,21 +187,8 @@ def get_item(dictionary, key):
 def movie_list(request):
     movies = Movies.objects.all()
 
-    # Fetching similar movies from KNN model
-    predicted_similar_movies = {}
-    for movie in movies:
-        try:
-            similar_movies_df = get_similar_movies(movie.title)
-            similar_movies = []
-            for index, row in similar_movies_df.iterrows():
-                similar_movies.append(row['title'])
-            predicted_similar_movies[movie.title] = similar_movies
-        except:
-            predicted_similar_movies[movie.title] = None
-
     return render(request, 'movie_list.html', {
-        'movies': movies,
-        'similar_movies': predicted_similar_movies
+        'movies': movies
     })
 
 
