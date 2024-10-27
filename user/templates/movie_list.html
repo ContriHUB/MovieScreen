@@ -15,6 +15,7 @@
       <li>{{ movie.description }}</li>
       <a href="{% url 'user:movie_details' %}?imdb_id={{movie.imdb_id}}">
         <img
+          class="click-poster"
           src="{{ movie.poster.url }}"
           width="200px"
           alt="{{ movie.title }} poster"
