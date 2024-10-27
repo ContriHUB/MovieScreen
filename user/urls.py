@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 from .views import submit_rating
 
-from .views import shows,add_movie,AddShowView,MovieAutocomplete,movie_list,book_ticket,login_view,sign_up,logout_view
+from .views import shows,add_movie,AddShowView,MovieAutocomplete,movie_list,book_ticket,login_view,sign_up,logout_view,movie_details
 
 urlpatterns = [
     
@@ -18,7 +18,6 @@ urlpatterns = [
     path('login/',login_view,name='login'),
     path('sign_up/',sign_up,name='sign_up'),
     path('logout/',logout_view,name='logout'),
-    path('submit_rating/<int:movie_id>/', submit_rating, name='submit_rating'),
-
-    
+    path('movie_details/',movie_details,name='movie_details'),
+    path('submit_rating/<int:movie_id>/', submit_rating, name='submit_rating')
 ]

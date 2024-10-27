@@ -24,11 +24,50 @@ from django.template.defaulttags import register
 from notebook.recommendation import recommend_similar_movies_model1 as get_similar_movies
 
 API_KEY = os.getenv('API_KEY')
+TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
 @login_required
 def shows(request):
     shows = Show.objects.all().order_by('-time')
     return render(request, 'shows.html', {'shows': shows})
+
+@login_required
+def movie_details(request):
+    """
+    DISPLAY A PAGE WITH DETAILS ABOUT THE MOVIE ON WHICH THE USER CLICKS
+    ALSO SHOW LIST OF CAST MEMBERS
+    """
+
+    id=request.GET.get('imdb_id','')
+    movie=Movies.objects.filter(imdb_id=id)
+    if movie:
+        
+        # FETCH THE CAST LIST OF THE MOVIE
+        tmdb_api_key=TMDB_API_KEY
+        url=f"https://api.themoviedb.org/3/movie/{id}/credits?api_key={tmdb_api_key}"
+        response=requests.get(url)
+        filtered_cast={}
+        if response.status_code == 200:
+            data=response.json()
+            croplen=0
+            if len(data['cast'])>=10:
+                croplen=10
+            else:
+                croplen=len(data['cast'])
+            filtered_cast = [
+                {
+                    'name': member['name'],
+                    'character': member['character'],
+                    'img_url' : f"https://image.tmdb.org/t/p/w200{member['profile_path']}"
+                }
+                for member in data['cast'][:croplen] if member['character']
+            ]
+        context={
+            "movie":movie,
+            "cast":filtered_cast
+        }
+
+    return render(request,'movie_details.html',context)
 
 @method_decorator(login_required, name="dispatch")
 class MovieAutocomplete(View):
@@ -97,6 +136,12 @@ def add_movie(request):
                     title=title,
                     description=description,
                     available=True,
+                    age_rating=data["Rated"],
+                    runtime=data["Runtime"],
+                    rel_date=data["Released"],
+                    director=data["Director"],
+                    imdb_id=data["imdbID"],
+                    genres=data["Genre"],
                     imdb_rating=round(imdb_rating, 1) if imdb_rating else None,
                     critic_rating=round(critic_rating, 1) if critic_rating else None,
                 )

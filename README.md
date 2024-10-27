@@ -88,16 +88,25 @@ To fetch movie data from OMDB, you need to create an API key. Follow these steps
 6. Navigate to the API Key section in your profile.
 7. Copy your generated API key.
 
-###    Adding the OMDB API Key to Your Project
-1. Create a .env file in the root directory of your project:
+## Connecting to the TMBD API
+To fetch cast names and images of a movie from TMDB, you need to create an API key. Follow these steps:
+1. Go to the OMDB API website: https://www.themoviedb.org/settings/api
+2. You should be logged in the access this page. If not then signup or login.
+3. In the 'Request API key' section click on the given link.
+4. Choose the 'Developer' option
+5. Accept the license aggrement.
+6. Fill the required details in the form.
+7. Copy your genearted 'API Key'(not the API read access token).
+
+###    Adding the TMDB API Key to Your Project
+1. Create a .env file in the root directory of your project, if created already then skip to step 2:
 ```bash
 touch .env
 ```
-2. Add your OMDB API key to the .env file:
+2. Add your TMDB API key to the .env file as:
 ```bash
- API_KEY=os.getenv('Secret key')
+ TMDB_API_KEY=<your_api_key>
 ```
-3. Use the API_KEY in your code when making API requests.
 
 ## Contributing 
 While raing the pull request, add ypur name to the CONTRIBUTORS.md file
