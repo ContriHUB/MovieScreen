@@ -11,6 +11,7 @@
             <div style="padding: 10px;">
                 <li id="textTitle">{{ show.movie.title }}</li> 
                 <li>{{ show.time }}</li> 
+                <img class="click-poster" src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
                 <a href="{% url "user:about_movie" %}?movie_name={{ show.movie.title }}">
                     <img src="{{ show.movie.poster.url }}" width="200px" alt="{{ show.movie.title }} poster">
                 </a>
