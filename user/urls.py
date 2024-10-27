@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 from .views import submit_rating,AboutMovie
 
-from .views import shows,add_movie,AddShowView,MovieAutocomplete,movie_list,book_ticket,login_view,sign_up,logout_view
+from .views import shows,add_movie,AddShowView,MovieAutocomplete,movie_list,book_ticket,login_view,sign_up,logout_view,movie_details
 
 urlpatterns = [
     

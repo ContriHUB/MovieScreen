@@ -7,8 +7,8 @@
   />
 </head>
 <body>
-  <h1>Movie List</h1>
-  <ul>
+  <h1 class="main-heading">Movie List</h1>
+  <ul class="movie-list">
     {% for movie in movies %}
     <div style="padding: 10px">
       <li id="textTitle">{{ movie.title }}</li>
@@ -68,7 +68,6 @@
     <li>No movies available.</li>
     {% endfor %}
   </ul>
-
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const movieContainers = document.querySelectorAll(".movie");
