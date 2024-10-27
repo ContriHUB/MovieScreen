@@ -33,7 +33,7 @@ def genres_to_feature_vector(input_genres, features=features, genre_mapping=tmdb
     
     dataset_genres = set()
     for genre in input_genres:
-        mapped_genres = genre_mapping.get(genre, [])
+        mapped_genres = genre_mapping.get(genre, [genre])
         dataset_genres.update(mapped_genres)
 
     for genre in dataset_genres:
