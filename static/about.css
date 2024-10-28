@@ -1,0 +1,130 @@
+/* Some resets because of the conflicting css in other files */
+
+h1,
+p {
+    margin: 0;
+}
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+h3{
+    margin-bottom: 1rem;
+}
+
+
+.container {
+    width: 100%;
+    height: 92dvh;
+    min-height: 92dvh;
+    background-color: #ddd;
+    padding-top: 5%;
+}
+
+.holder {
+    box-shadow: -1rem 0 8px 8px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    min-height: 100%;
+    background-color: #eee;
+    padding: .5rem 4rem;
+}
+
+.movie-info {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem;
+    gap: 2.5rem;
+    border-bottom: 3px solid gray;
+    /* margin-bottom: 1rem; */
+}
+
+.movie-review {
+    padding: 1rem;
+}
+
+.review-field,table{
+    padding: 1rem;
+    background-color: #ddd;
+    border-radius: .5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+table tbody{
+    display: flex;
+    flex-flow: column nowrap;
+    gap:1.25rem;
+    & tr{
+        border-bottom: .1rem solid gray;
+        padding: 1rem;
+
+    }
+
+}
+td{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: .5rem;
+    & p{
+        font-style: italic;
+        padding: 0 1rem;
+    }
+
+    & h2{
+        font-style: italic;
+        color: gray;
+    }
+
+    & .date{
+        text-align:end;
+        font-size: .9rem;
+        font-style: italic;
+        color: gray;
+    }
+}
+
+input[name="movie_name"]{
+    display: none;
+}
+
+
+textarea{
+    width: 100%;
+    height: 8rem;
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    padding: .5rem;
+    outline: none;
+    background-color: #fefefeb1;
+}
+
+input[type="submit"]{
+    background-color: #333;
+    padding: .5rem 2rem;
+    border-radius: .2rem;
+    margin-top: .5rem;
+    font-size: 1.1rem;
+    color: #eee;
+
+}
+
+h2{
+    margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+
+    .movie-info {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    p{
+        text-align: justify;
+    }
+    textarea{
+        height: 12rem;
+    }
+
+}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{% static "about.css" %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="container">
+        <div class="holder">
+            <div class="movie-info">
+                <div class="movie-poster">
+                    <img src="{{ movie.poster.url }}" alt="Movie Poster">
+                </div>
+                <div class="movie-discription">
+                    <h1 class="movie-title">{{ movie.title }}</h1>
+                    <h3>Description</h3>
+                    <p class="movie-discription">{{ movie.description }}</p>
+                </div>
+            </div>
+            <div class="movie-review">
+                {% if can_review %}
+                <div class="review-field">
+                   <h3>Add your review</h3>
+                   <form method="post" action='{% url "user:about_movie" %}?movie_name={{ movie.title }}'>
+                       {% csrf_token %}
+                       <input type="input" readonly name="movie_name" value="{{ movie.title }}">
+                       
+                       <textarea name="review"></textarea>
+                       <input type="submit" value="Submit">
+                   </form>
+                </div> 
+                {% endif %}
+                <h2>Reviews</h2>
+                <table>
+                    {% if reviews %}
+                    {% for review in reviews %}
+                    <tr>
+                        <td>
+                            <h4>@{{ review.review_from.username }}</h4>
+                            <p>{{ review.review_content }}</p>
+                            <div class="date">{{ review.review_date }}</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td>
+                            <h2>No reviews yet</h2>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block script-block %}{% endblock script-block %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{% static "movie_not_found.css" %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="container">
+
+        <div>
+            <h1>404</h1>
+            <p>Movie Not Found</p>
+        </div>
+        
+    </div>
+{% endblock %}
+{% block script-block %}{% endblock script-block %}

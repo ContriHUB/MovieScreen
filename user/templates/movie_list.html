@@ -13,13 +13,11 @@
     <div style="padding: 10px">
       <li id="textTitle">{{ movie.title }}</li>
       <li>{{ movie.description }}</li>
-
       <a href="{% url 'user:movie_details' %}?imdb_id={{movie.imdb_id}}">
         <img
           class="click-poster"
           src="{{ movie.poster.url }}"
           width="200px"
-          height="100px"
           alt="{{ movie.title }} poster"
         />
       </a>

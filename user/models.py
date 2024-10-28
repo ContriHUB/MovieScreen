@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import datetime
+
 
 class Movies(models.Model):
     title = models.CharField(max_length=255)
@@ -42,3 +44,11 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.show.movie.title} - Seat: {self.seat_number}"
+
+class Reviews(models.Model):
+    review_content=models.TextField()
+    review_from= models.ForeignKey(User,on_delete=models.CASCADE)
+    review_of=models.ForeignKey(Movies,on_delete=models.CASCADE)
+    review_date=models.DateTimeField(default=datetime.now)
+    def __str__(self):
+        return f"Review form {self.review_from.username} on {self.review_of.title}"
