@@ -37,7 +37,7 @@ def movie_details(request):
     DISPLAY A PAGE WITH DETAILS ABOUT THE MOVIE ON WHICH THE USER CLICKS
     ALSO SHOW LIST OF CAST MEMBERS
     """
-
+    placeholder_poster = 'https://dancyflix.com/placeholder.png'
     id=request.GET.get('imdb_id','')
     movie=Movies.objects.filter(imdb_id=id)
     if movie:
@@ -78,7 +78,8 @@ def movie_details(request):
             title = get_omdb_title(similar_movie)
             omdb_search_url = f"http://www.omdbapi.com/?apikey={API_KEY}&t={title}"
             omdb_response = requests.get(omdb_search_url).json()
-            similar_movies_poster_url[similar_movie] = omdb_response.get('Poster')
+            poster = omdb_response.get('Poster')
+            similar_movies_poster_url[similar_movie] = poster or placeholder_poster
 
         context={
             "movie":movie,
