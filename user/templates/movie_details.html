@@ -49,6 +49,25 @@
             {% endif %}
         </div>
     </div>
-    {%endfor%}
+
+    <!--- Movie Recommendation -->
+    <div class="watchlist-container">
+        <h1 class="watchlist-head">Suggested Watchlist</h1>
+        {% if similar_movies %}
+        <ul class="watchlist-list">
+            {% for similar_movie in similar_movies %}
+            <li class="watchlist-item">
+                <img src="{{similar_movies_poster_url|get_item:similar_movie}}" alt="" class="watchlist-poster">
+                <h4 class="watchlist-title">{{ similar_movie }}</h4>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="watchlist-error">No suggestions available for this title.</p>
+        {% endif %}
+    </div>
+  
+{%endfor%}
 </div>
+
 {% endblock %}
