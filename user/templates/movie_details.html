@@ -5,11 +5,9 @@
 <link rel="stylesheet" href="{% static "movie_details.css" %}">
 {% endblock stylesheets %}
 {% block content %}
+<div class='container'>
 {% for obj in movie %}
-<head>
-    {%block title%}<title>{{obj.title}}</title>{%endblock%}
-</head>
-<body>
+
     <div class="main-container">
         <div class="details-container">
             <div class="grid-2-cols">
@@ -51,6 +49,6 @@
             {% endif %}
         </div>
     </div>
-</body>
-{%endfor%}
+    {%endfor%}
+</div>
 {% endblock %}

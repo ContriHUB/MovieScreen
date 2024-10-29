@@ -6,3 +6,4 @@ myvenv/
 /media/
 /user/migrations/
 .env
+./user/templatetags/__pycache__

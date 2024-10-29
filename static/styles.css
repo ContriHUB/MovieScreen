@@ -371,18 +371,18 @@ box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
   height: 25px;
   width: 30px;
   margin: 5px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: .25rem;
+  padding: 1.25rem;
   border: 1px solid rgb(151, 151, 151);
 }
 
 .seats.selected {
-  background-color: #6feaf6;
+  background-color: lightgreen;
   color: black;
 }
 
 .seats.occupied {
-  background-color: #fff;
+  background-color: rgb(255, 62, 62);
   color: black;
 }
 

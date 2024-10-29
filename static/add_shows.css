@@ -1,0 +1,29 @@
+form{
+    display: flex;
+    flex-flow: column nowrap;
+    gap:.5rem;
+}
+form select,
+form input{
+    height: 2.25rem;
+    outline: none;
+    padding-inline: .25rem;
+}
+
+
+form div{
+    display: flex;
+    flex-flow: column nowrap;
+    gap:.5rem
+}
+
+.form-div {
+    box-shadow: 0 .5rem .75rem .15rem rgba(0, 0, 0, 0.125);
+    border: .15rem solid #444;
+    padding: 2.25rem 1.5rem;
+    border-radius: .3rem;
+}
+
+form button[class="submitButton"]{
+    margin-top: .75rem;
+}
