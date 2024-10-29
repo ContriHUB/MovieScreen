@@ -1,0 +1,72 @@
+.container {
+    max-width: 100%;
+    padding: 0 4rem;
+}
+
+.main-heading {
+    margin: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+
+.click-poster {
+    aspect-ratio: 2/3;
+    height: 300px;
+    width: auto;
+    align-content: center;
+}
+
+.movie-poster {
+
+    width: auto;
+
+}
+
+.movie-list {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.movie-list li {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+    background-color: white;
+    border-radius: .75rem;
+    box-shadow: 0 0 8px 10px rgba(0, 0, 0, 0.02);
+}
+
+.movie-list .movie-info {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: start;
+}
+
+#textTitle {
+    font-size: 2rem;
+}
+
+hr {
+    margin-block: .75rem;
+}
+
+.discription {
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-size: .9rem;
+}
+
+button[type='submit'] {
+    color: #eee;
+    background-color: #333;
+    border-radius: .2rem;
+    padding: .5rem 1.5rem;
+    font-size: 1rem;
+    outline: none;
+    margin-top: .75rem;
+}

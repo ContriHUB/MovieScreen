@@ -1,26 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static "shows.css" %}">
+{% endblock stylesheets %}
 {% block content %}
-<head>
-    <title>Shows List</title>
-</head>
+
 <body>
-    <h1 class="main-heading">Show List</h1>
-    <ul class="movie-list">
-        {% for show in shows %}
-            <div style="padding: 10px;">
-                <li id="textTitle">{{ show.movie.title }}</li> 
-                <li>{{ show.time }}</li> 
-                <img class="click-poster" src="{{ show.movie.poster.url }}" width="200px" height="100px" alt="{{ show.movie.title }} poster">
-                <a href="{% url "user:about_movie" %}?movie_name={{ show.movie.title }}">
-                    <img src="{{ show.movie.poster.url }}" width="200px" alt="{{ show.movie.title }} poster">
-                </a>
-                <!-- Add the 'Book Ticket' link for each show -->
-                <li><a href="{% url 'user:book_ticket' show.id %}">Book Ticket</a></li>
-            </div>
-        {% empty %}
-            <li>No shows available.</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1 class="main-heading">Show List</h1>
+        <ul class="movie-list">
+            {% for show in shows %}
+               
+                <li>
+                    <div class="movie-poster">
+                        <a href="{% url "user:about_movie" %}?movie_name={{ show.movie.title }}">
+                            <img class="click-poster" src="{{ show.movie.poster.url }}"  alt="{{ show.movie.title }} poster">
+                        </a>
+                    </div>
+                    <div class="movie-info">
+                        <h3 id="textTitle">{{ show.movie.title }}</h3>
+                        <hr>
+                        <p>{{ show.time }}</p>
+                        <!-- Add the 'Book Ticket' link for each show -->
+                        <a href="{% url 'user:book_ticket' show.id %}">Book Ticket</a>
+                    </div>
+
+                </li> 
+            {% empty %}
+                <li>No shows available.</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 {% endblock %}

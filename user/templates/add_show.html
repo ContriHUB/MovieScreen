@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
+
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static "add_movie.css" %}">
+<link rel="stylesheet" href="{% static "add_shows.css" %}">
+{% endblock stylesheets %}
+
 
 {% block content %}
-<head>
-    <title>Add Show</title>
-</head>
-<body>
-    <h1 class="main-heading">Add Show</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="submitButton"type="submit">Add Show</button>
-    </form>
-</body>
+
+    <div class="container">
+        <div class="form-div">
+            <h1 class="main-heading">Add Show</h1>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <button class="submitButton" type="submit">Add Show</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
