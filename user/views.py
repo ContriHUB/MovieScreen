@@ -24,6 +24,8 @@ from urllib.parse import urlencode
 from django.urls import reverse
 from datetime import datetime
 from better_profanity import profanity
+from django.template.defaulttags import register
+from notebook.recommender import recommend_by_genres
 
 API_KEY = os.getenv('API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
@@ -39,7 +41,7 @@ def movie_details(request):
     DISPLAY A PAGE WITH DETAILS ABOUT THE MOVIE ON WHICH THE USER CLICKS
     ALSO SHOW LIST OF CAST MEMBERS
     """
-
+    placeholder_poster = 'https://dancyflix.com/placeholder.png'
     id=request.GET.get('imdb_id','')
     movie=Movies.objects.filter(imdb_id=id)
     if movie:
@@ -64,9 +66,30 @@ def movie_details(request):
                 }
                 for member in data['cast'][:croplen] if member['character']
             ]
+
+        # fetch similar movies
+        genres = list(map(lambda x: x.strip(), movie.first().genres.split(',')))
+        similar_movies = recommend_by_genres(genres)
+        similar_movies_poster_url = {}
+
+        def get_omdb_title(similar_movie):
+            title = similar_movie.split('(')[0].strip()
+            if title.endswith(", The"):
+                title = "The " + title[:-5].strip()
+            return title
+
+        for similar_movie in similar_movies:
+            title = get_omdb_title(similar_movie)
+            omdb_search_url = f"http://www.omdbapi.com/?apikey={API_KEY}&t={title}"
+            omdb_response = requests.get(omdb_search_url).json()
+            poster = omdb_response.get('Poster')
+            similar_movies_poster_url[similar_movie] = poster or placeholder_poster
+
         context={
             "movie":movie,
-            "cast":filtered_cast
+            "cast":filtered_cast,
+            "similar_movies":similar_movies,
+            "similar_movies_poster_url":similar_movies_poster_url
         }
 
     return render(request,'movie_details.html',context)
@@ -145,7 +168,7 @@ def add_movie(request):
                     imdb_id=data["imdbID"],
                     genres=data["Genre"],
                     imdb_rating=round(imdb_rating, 1) if imdb_rating else None,
-                    critic_rating=round(critic_rating, 1) if critic_rating else None
+                    critic_rating=round(critic_rating, 1) if critic_rating else None,
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
                 movie.save()
@@ -160,11 +183,18 @@ def add_movie(request):
            return redirect('user:movie_list')
     else:
         return render(request, 'add_movie.html')
+    
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 @login_required
 def movie_list(request):
     movies = Movies.objects.all()
-    return render(request, 'movie_list.html', {'movies': movies})
+
+    return render(request, 'movie_list.html', {
+        'movies': movies
+    })
 
 
 @method_decorator(login_required, name="dispatch")
