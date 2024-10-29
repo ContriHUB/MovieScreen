@@ -1,73 +1,75 @@
-{% extends 'base.html' %} {% load star_rating %} {% block content %}
-<head>
-  <title>Movie List</title>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-  />
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %} 
+{% block stylesheets %} 
+<link
+rel="stylesheet" href="{% static "movie_list.css" %}"> 
+{% endblock stylesheets%} 
+{% load star_rating %} 
+{% block content %}
+<div class="container">
   <h1 class="main-heading">Movie List</h1>
   <ul class="movie-list">
     {% for movie in movies %}
-    <div style="padding: 10px">
-      <li id="textTitle">{{ movie.title }}</li>
-      <li>{{ movie.description }}</li>
-
-      <a href="{% url 'user:movie_details' %}?imdb_id={{movie.imdb_id}}">
-        <img
-          class="click-poster"
-          src="{{ movie.poster.url }}"
-          width="200px"
-          height="100px"
-          alt="{{ movie.title }} poster"
-        />
-      </a>
-
-      <div>
-        <h4>IMDb Rating:</h4>
-        <span class="stars">{{ movie.imdb_rating|fa_star_rating|safe }}</span>
+    <li>
+      <div class="movie-poster">
+        <a href="{% url 'user:movie_details' %}?imdb_id={{movie.imdb_id}}">
+          <img
+            class="click-poster"
+            src="{{ movie.poster.url }}"
+            width="200px"
+            alt="{{ movie.title }} poster"
+          />
+        </a>
       </div>
-
-      <div>
-        <h4>Critic Rating:</h4>
-        <span class="stars">{{ movie.critic_rating|fa_star_rating|safe }}</span>
-      </div>
-      <div>
-        <h4>Average User Rating:</h4>
-        <div class="stars">
-          {{ movie.user_rating|fa_star_rating|safe }} ({{ movie.rating_count }})
+      <div class="movie-info">
+        <h3 id="textTitle">{{ movie.title }}</h3>
+        <hr />
+        <h4 class='discription'>{{ movie.description }}</h4>
+        <div>
+          <h4>IMDb Rating:</h4>
+          <span class="stars">{{ movie.imdb_rating|fa_star_rating|safe }}</span>
         </div>
-      </div>
-      <br />
-      <div>
-        <h4>Submit Rating:</h4>
-        <div class="movie" data-movie-id="{{ movie.id }}">
-          <form
-            method="POST"
-            action="{% url 'user:submit_rating' movie.id %}"
-            class="rating-form"
+
+        <div>
+          <h4>Critic Rating:</h4>
+          <span class="stars"
+            >{{ movie.critic_rating|fa_star_rating|safe }}</span
           >
-            {% csrf_token %}
-            <div class="user-rating" style="display: flex; cursor: pointer">
-              <i class="far fa-star" data-value="1"></i>
-              <i class="far fa-star" data-value="2"></i>
-              <i class="far fa-star" data-value="3"></i>
-              <i class="far fa-star" data-value="4"></i>
-              <i class="far fa-star" data-value="5"></i>
-            </div>
-            <input
-              type="hidden"
-              name="user_rating"
-              id="user_rating_{{ movie.id }}"
-              value="0"
-            />
-            <button type="submit">Submit</button>
-          </form>
+        </div>
+        <div>
+          <h4>Average User Rating:</h4>
+          <div class="stars">
+            {{ movie.user_rating|fa_star_rating|safe }} {{ movie.rating_count}}
+          </div>
+        </div>
+        <div>
+          <h4>Submit Rating:</h4>
+          <div class="movie" data-movie-id="{{ movie.id }}">
+            <form
+              method="POST"
+              action="{% url 'user:submit_rating' movie.id %}"
+              class="rating-form"
+            >
+              {% csrf_token %}
+              <div class="user-rating" style="display: flex; cursor: pointer">
+                <i class="far fa-star" data-value="1"></i>
+                <i class="far fa-star" data-value="2"></i>
+                <i class="far fa-star" data-value="3"></i>
+                <i class="far fa-star" data-value="4"></i>
+                <i class="far fa-star" data-value="5"></i>
+              </div>
+              <input
+                type="hidden"
+                name="user_rating"
+                id="user_rating_{{ movie.id }}"
+                value="0"
+              />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
         </div>
       </div>
-
-    </div>
+    </li>
     {% empty %}
     <li>No movies available.</li>
     {% endfor %}
@@ -102,5 +104,6 @@
       });
     });
   </script>
-</body>
+</div>
+
 {% endblock %}

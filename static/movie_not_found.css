@@ -1,0 +1,17 @@
+.container{
+    height: 92dvh;
+    padding: 1rem 4rem;
+    display: grid;
+    place-items: center;
+}
+
+h1{
+    margin: 0;
+    font-size: 12rem;
+    color: rgba(128, 128, 128, 0.5);
+}
+h1~p{
+    font-size: 2rem;
+    color: rgba(128, 128, 128, 0.5);
+    text-align: center;
+}

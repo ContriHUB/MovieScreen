@@ -1,0 +1,38 @@
+li a,
+li a:visited {
+    padding-inline: 1rem;
+    padding-block: .5rem;
+    background-color: #333;
+    color: #eee;
+    border-radius: .2rem;
+    text-decoration: none;
+}
+
+.container{
+    max-width: 100%;
+    padding: 2rem 4rem;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    margin: 0;
+    gap: 2rem;
+}
+.main-container{
+    margin: 0;
+    width: 80%;
+    align-content: center;
+    border: none;
+    background-color: white;
+    border-radius: .75rem;box-shadow: 0 0 8px 10px rgba(0, 0, 0, 0.02);
+    padding: .5rem 0 2rem 0;
+}
+
+.movie-poster{
+    height: 30rem;
+    width: auto;
+    aspect-ratio: 2/3;
+}
+
+.movie-title{
+    border-bottom: .1rem solid gray;
+}

@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+
+{% load static %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static "movie_details.css" %}">
+{% endblock stylesheets %}
 {% block content %}
+<div class='container'>
 {% for obj in movie %}
-<head>
-    {%block title%}<title>{{obj.title}}</title>{%endblock%}
-</head>
-<body>
+
     <div class="main-container">
         <div class="details-container">
             <div class="grid-2-cols">
@@ -17,6 +20,7 @@
                         <li>Age Rating: {{obj.age_rating}}</li>
                         <li>Director: {{obj.director}}</li>
                         <li>Genre: {{obj.genres}}</li>
+                        <li><a href="{% url "user:about_movie" %}?movie_name={{ obj.title }}">Reviews</a></li>
                     </ul>
                 </div>
             </div>
@@ -62,7 +66,8 @@
         <p class="watchlist-error">No suggestions available for this title.</p>
         {% endif %}
     </div>
-    
-</body>
+  
 {%endfor%}
+</div>
+
 {% endblock %}
