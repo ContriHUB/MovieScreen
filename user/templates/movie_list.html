@@ -14,13 +14,14 @@
     {% for movie in movies %}
     <div class="movie-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px; margin: 10px; max-width: 300px;">
       <h2 id="textTitle">{{ movie.title }}</h2>
-      <img
-        src="{{ movie.poster.url }}"
-        width="100%"
-        height="auto"
-        alt="{{ movie.title }} poster"
-        style="border-radius: 8px;"
-      />
+      <a href="{% url 'user:movie_details' %}?imdb_id={{movie.imdb_id}}">
+          <img
+            class="click-poster"
+            src="{{ movie.poster.url }}"
+            width="200px"
+            alt="{{ movie.title }} poster"
+          />
+        </a>
       <p>{{ movie.description }}</p>
 
       <div class="rating-section">
