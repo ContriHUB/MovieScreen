@@ -26,7 +26,10 @@ from datetime import datetime
 from better_profanity import profanity
 from django.template.defaulttags import register
 from notebook.recommender import recommend_by_genres
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+import random
 API_KEY = os.getenv('API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 genre_keywords = {
@@ -51,13 +54,23 @@ genre_keywords = {
     'War': ['war', 'battlefield', 'soldier', 'military', 'combat'],
     'Western': ['western', 'cowboy', 'frontier', 'outlaw'],
 }
+data = []
+labels = []
+
+for genre, keywords in genre_keywords.items():
+    for _ in range(50):  # Create 50 examples per genre
+        description = " ".join(random.choices(keywords, k=5))  # Sample keywords to form a description
+        data.append(description)
+        labels.append(genre)
+
+# Create the TF-IDF and Naive Bayes pipeline
+model = make_pipeline(TfidfVectorizer(), MultinomialNB())
+
+# Train the model
+model.fit(data, labels)
 def predict_genre(description):
-    description = description.lower()
-    for genre, keywords in genre_keywords.items():
-        for keyword in keywords:
-            if keyword in description:
-                return genre  
-    return 'Drama' 
+    return model.predict([description])[0]
+
 @login_required
 def shows(request):
     shows = Show.objects.all().order_by('-time')
