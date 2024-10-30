@@ -129,3 +129,94 @@ pip freeze > requirements.txt
 ### Note: 
 Make sure of the spellcheck.\
 Might not work with proxy so try using you cellular network
+
+
+# Movie Screen Features
+---
+ ### Content Table
+- [Signup/Login](#signup-login)
+- [Show Listing](#show-listing)
+- [Show Ticket Booking](#show-ticket-booking)
+- [Adding New Show](#add-new-show)
+- [Movie Listing](#movie-listing)
+- [Adding New Movie](#add-new-movie)
+- [Movie Details](#movie-details)
+- [Movie Reviews](#movie-reviews)
+
+
+## <u>SignUp Login</u>
+User signup and login along with custom toast notification\
+to deal wiht different fallback cases 
+
+<img src="screenshots/image.png" alt="Description of image" width="500" /><br>
+<img src="screenshots/image-1.png" alt="Description of image" width="500" /><br>
+<img src="screenshots/image-2.png" alt="Description of image" width="500" /><br>
+
+## <u>Show Listing</u>
+List of all available shows along with movie meta data such as\
+Movie title, Show timing, Poster and option to book show ticket
+
+<img src="screenshots/image-3.png" alt="Description of image" width="500" /><br>
+
+## <u>Show Ticket Booking</u>
+Display page list of all available show seats indicated via\
+different colors for availability. 
+Option to confirm ticket booking or go\
+back to shows page 
+
+
+<img src="screenshots/image-6.png" alt="Description of image" width="500" /><br>
+<img src="screenshots/image-7.png" alt="Description of image" width="500" /><br>
+
+## <u>Add New Show</u>
+Form page to add new show from available movies, show timeing\
+&
+unique UUID
+
+
+<img src="screenshots/image-8.png" alt="Description of image" width="500" /><br>
+
+
+## <u>Movie Listing</u>
+
+List of all available movies along with movie meta data such as\
+Movie title, discription, Poster, imdb & Critic rating via omdbapi and\
+option to add add personal ratings
+
+<img src="screenshots/image-9.png" alt="Description of image" width="500" /><br>
+
+
+
+
+## <u>Add new movie</u>
+
+Form page to fetch and add movie information using the\
+omdbapi along with realtime suggestion
+
+<img src="screenshots/image-4.png" alt="Description of image" width="500" /><br>
+
+<img src="screenshots/image-5.png" alt="Description of image" width="500" /><br>
+
+## <u>Movie details</u>
+
+Page with detail discription about the movie.List of meta data about\
+movie including the cast info & the option to add review
+
+<img src="screenshots/image-10.png" alt="Description of image" width="500" /><br>
+
+<img src="screenshots/image-12.png" alt="Description of image" width="500" /><br>
+
+## <u>Movie Reviews</u>
+
+Page related to movies facilitating the user to add their movie\
+experience only after they have attended the movie session.\
+Also list of reviews from all users with mild Censorship against\
+swear words 
+
+
+<img src="screenshots/image-11.png" alt="Description of image" width="500" /><br>
+
+<img src="screenshots/image-14.png" alt="Description of image" width="500" /><br>
+
+
+
