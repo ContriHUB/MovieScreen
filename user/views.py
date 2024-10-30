@@ -29,7 +29,35 @@ from notebook.recommender import recommend_by_genres
 
 API_KEY = os.getenv('API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
-
+genre_keywords = {
+    'Action': ['fight', 'explosive', 'adventure', 'hero', 'battle', 'chase'],
+    'Adventure': ['journey', 'exploration', 'quest', 'expedition', 'discover'],
+    'Animation': ['animated', 'cartoon', 'family-friendly', 'animated film'],
+    'Biography': ['biography', 'life story', 'based on a true story', 'real life'],
+    'Comedy': ['comedy', 'humor', 'funny', 'laugh', 'joke', 'hilarious'],
+    'Crime': ['crime', 'murder', 'detective', 'investigation', 'criminal'],
+    'Documentary': ['documentary', 'real-life', 'non-fiction', 'informative'],
+    'Drama': ['drama', 'emotional', 'realistic', 'relationship', 'conflict'],
+    'Family': ['family', 'children', 'kid-friendly', 'parenting'],
+    'Fantasy': ['fantasy', 'magical', 'imagination', 'supernatural'],
+    'History': ['historical', 'based on history', 'period', 'historical drama'],
+    'Horror': ['horror', 'scary', 'fright', 'ghost', 'haunted'],
+    'Music': ['music', 'musical', 'song', 'dance', 'performance'],
+    'Mystery': ['mystery', 'whodunit', 'puzzle', 'secret'],
+    'Romance': ['romance', 'love', 'relationship', 'passion', 'affection'],
+    'Sci-Fi': ['science fiction', 'space', 'futuristic', 'alien', 'technology'],
+    'Sport': ['sports', 'competition', 'athlete', 'team'],
+    'Thriller': ['thriller', 'suspense', 'tension', 'excitement'],
+    'War': ['war', 'battlefield', 'soldier', 'military', 'combat'],
+    'Western': ['western', 'cowboy', 'frontier', 'outlaw'],
+}
+def predict_genre(description):
+    description = description.lower()
+    for genre, keywords in genre_keywords.items():
+        for keyword in keywords:
+            if keyword in description:
+                return genre  
+    return 'Drama' 
 @login_required
 def shows(request):
     shows = Show.objects.all().order_by('-time')
@@ -188,13 +216,39 @@ def add_movie(request):
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+genre_colors = {
+    'Action': 'red',
+    'Adventure': 'orange',
+    'Animation': 'lightblue',
+    'Biography': 'purple',
+    'Comedy': 'yellow',
+    'Crime': 'darkred',
+    'Documentary': 'green',
+    'Drama': 'blue',
+    'Family': 'pink',
+    'Fantasy': 'lightgreen',
+    'History': 'brown',
+    'Horror': 'black',
+    'Music': 'cyan',
+    'Mystery': 'darkblue',
+    'Romance': 'magenta',
+    'Sci-Fi': 'teal',
+    'Sport': 'gold',
+    'Thriller': 'darkviolet',
+    'War': 'olive',
+    'Western': 'tan',
+}  
 @login_required
 def movie_list(request):
     movies = Movies.objects.all()
-
-    return render(request, 'movie_list.html', {
-        'movies': movies
-    })
+    print(movies)
+    for movie in movies:
+        movie.genre = predict_genre(movie.description) 
+        print(movie.genre) 
+        movie.color = genre_colors.get(movie.genre, '#ccc')  
+        movie.save()  
+    
+    return render(request, 'movie_list.html', {'movies': movies})
 
 
 @method_decorator(login_required, name="dispatch")
