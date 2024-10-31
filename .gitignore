@@ -6,3 +6,6 @@ myvenv/
 /user/migrations/
 .env
 ./user/templatetags/__pycache__
+./user/templatetags/__init__.py
+./user/templatetags/__init__.pyc
+.DS_Store
