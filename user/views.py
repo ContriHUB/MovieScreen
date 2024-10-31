@@ -26,9 +26,51 @@ from datetime import datetime
 from better_profanity import profanity
 from django.template.defaulttags import register
 from notebook.recommender import recommend_by_genres
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+import random
+from .models import Movies, Tag
 API_KEY = os.getenv('API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
+genre_keywords = {
+    'Action': ['fight', 'explosive', 'adventure', 'hero', 'battle', 'chase'],
+    'Adventure': ['journey', 'exploration', 'quest', 'expedition', 'discover'],
+    'Animation': ['animated', 'cartoon', 'family-friendly', 'animated film'],
+    'Biography': ['biography', 'life story', 'based on a true story', 'real life'],
+    'Comedy': ['comedy', 'humor', 'funny', 'laugh', 'joke', 'hilarious'],
+    'Crime': ['crime', 'murder', 'detective', 'investigation', 'criminal'],
+    'Documentary': ['documentary', 'real-life', 'non-fiction', 'informative'],
+    'Drama': ['drama', 'emotional', 'realistic', 'relationship', 'conflict'],
+    'Family': ['family', 'children', 'kid-friendly', 'parenting'],
+    'Fantasy': ['fantasy', 'magical', 'imagination', 'supernatural'],
+    'History': ['historical', 'based on history', 'period', 'historical drama'],
+    'Horror': ['horror', 'scary', 'fright', 'ghost', 'haunted'],
+    'Music': ['music', 'musical', 'song', 'dance', 'performance'],
+    'Mystery': ['mystery', 'whodunit', 'puzzle', 'secret'],
+    'Romance': ['romance', 'love', 'relationship', 'passion', 'affection'],
+    'Sci-Fi': ['science fiction', 'space', 'futuristic', 'alien', 'technology'],
+    'Sport': ['sports', 'competition', 'athlete', 'team'],
+    'Thriller': ['thriller', 'suspense', 'tension', 'excitement'],
+    'War': ['war', 'battlefield', 'soldier', 'military', 'combat'],
+    'Western': ['western', 'cowboy', 'frontier', 'outlaw'],
+}
+data = []
+labels = []
+
+for genre, keywords in genre_keywords.items():
+    for _ in range(50):  # Create 50 examples per genre
+        description = " ".join(random.choices(keywords, k=5))  # Sample keywords to form a description
+        data.append(description)
+        labels.append(genre)
+
+# Create the TF-IDF and Naive Bayes pipeline
+model = make_pipeline(TfidfVectorizer(), MultinomialNB())
+
+# Train the model
+model.fit(data, labels)
+def predict_genre(description):
+    return model.predict([description])[0]
 
 @login_required
 def shows(request):
@@ -171,6 +213,11 @@ def add_movie(request):
                     critic_rating=round(critic_rating, 1) if critic_rating else None,
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
+                genres = data.get("Genre", "").split(", ")
+                for genre in genres:
+                    tag, created = Tag.objects.get_or_create(name=genre.strip()) 
+                    movie.tags.add(tag) 
+
                 movie.save()
 
                 return redirect('user:movie_list') 
@@ -188,13 +235,39 @@ def add_movie(request):
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+genre_colors = {
+    'Action': 'red',
+    'Adventure': 'orange',
+    'Animation': 'lightblue',
+    'Biography': 'purple',
+    'Comedy': 'yellow',
+    'Crime': 'darkred',
+    'Documentary': 'green',
+    'Drama': 'blue',
+    'Family': 'pink',
+    'Fantasy': 'lightgreen',
+    'History': 'brown',
+    'Horror': 'black',
+    'Music': 'cyan',
+    'Mystery': 'darkblue',
+    'Romance': 'magenta',
+    'Sci-Fi': 'teal',
+    'Sport': 'gold',
+    'Thriller': 'darkviolet',
+    'War': 'olive',
+    'Western': 'tan',
+}  
 @login_required
 def movie_list(request):
     movies = Movies.objects.all()
-
-    return render(request, 'movie_list.html', {
-        'movies': movies
-    })
+    print(movies)
+    for movie in movies:
+        movie.genre = predict_genre(movie.description) 
+        print(movie.genre) 
+        movie.color = genre_colors.get(movie.genre, '#ccc')  
+        movie.save()  
+    
+    return render(request, 'movie_list.html', {'movies': movies})
 
 
 @method_decorator(login_required, name="dispatch")
