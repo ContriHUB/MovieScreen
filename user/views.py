@@ -30,6 +30,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
 import random
+from .models import Movies, Tag
 API_KEY = os.getenv('API_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 genre_keywords = {
@@ -212,6 +213,11 @@ def add_movie(request):
                     critic_rating=round(critic_rating, 1) if critic_rating else None,
                 )
                 movie.poster.save(f"{title}_poster.jpg", File(img_temp)) 
+                genres = data.get("Genre", "").split(", ")
+                for genre in genres:
+                    tag, created = Tag.objects.get_or_create(name=genre.strip()) 
+                    movie.tags.add(tag) 
+
                 movie.save()
 
                 return redirect('user:movie_list') 
